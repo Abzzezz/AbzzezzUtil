@@ -1,7 +1,13 @@
+/*
+ * Copyright (c) 2020. Roman P.
+ * All code is owned by Roman P.
+ * Abzzezz Util is used to automate easy tasks.
+ *
+ */
+
 package ga.abzzezz.util.animations;
 
 import java.lang.reflect.InvocationTargetException;
-
 import java.lang.reflect.Method;
 
 /**

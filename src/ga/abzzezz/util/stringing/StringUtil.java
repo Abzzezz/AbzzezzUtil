@@ -1,6 +1,15 @@
+/*
+ * Copyright (c) 2020. Roman P.
+ * All code is owned by Roman P.
+ * Abzzezz Util is used to automate easy tasks.
+ *
+ */
+
 package ga.abzzezz.util.stringing;
 
 import ga.abzzezz.util.logging.Logger;
+
+import java.util.ArrayList;
 
 public class StringUtil {
 
@@ -9,13 +18,23 @@ public class StringUtil {
      */
     public static String splitter = ":::";
 
-
-
+    /**
+     * @param in
+     * @param toSearch
+     * @param endModifire
+     * @return
+     */
     public static String getStringFromLong(String in, String toSearch, char endModifire) {
         int startIndex = in.indexOf(toSearch) + toSearch.length();
         return in.substring(startIndex, getIndexOfCharInStringFromIndex(in, startIndex, endModifire));
     }
 
+    /**
+     * @param in
+     * @param startIndex
+     * @param find
+     * @return
+     */
     public static int getIndexOfCharInStringFromIndex(String in, int startIndex, char find) {
         try {
             char[] inCharArray = in.toCharArray();
@@ -33,6 +52,10 @@ public class StringUtil {
         return 0;
     }
 
+    /**
+     * @param in
+     * @return
+     */
     public static String removenotallowedCharacters(String in) {
         String[] toRemove = {"\\\\", ":", "\""};
         for (int i = 0; i < toRemove.length; i++) {
@@ -41,20 +64,38 @@ public class StringUtil {
         return in;
     }
 
-    public static String extractNumber(final String str) {
-        if(str == null || str.isEmpty()) return "";
+    public static String removenotallowedCharacters(String in, String[] array) {
+        for (int i = 0; i < array.length; i++) {
+            in = in.replaceAll(array[i], "");
+        }
+        return in;
+    }
 
+    /**
+     * @param str
+     * @return
+     */
+    public static String extractNumber(String str) {
+        if (str == null || str.isEmpty()) return "";
         StringBuilder sb = new StringBuilder();
-        boolean found = false;
-        for(char c : str.toCharArray()){
-            if(Character.isDigit(c)){
+        for (char c : str.toCharArray()) {
+            if (Character.isDigit(c)) {
                 sb.append(c);
-                found = true;
-            } else if(found){
                 break;
             }
         }
-
         return sb.toString();
     }
+
+    public static ArrayList<String> getAllNumbersInAString(String str) {
+        if (str == null || str.isEmpty()) return null;
+        ArrayList<String> out = new ArrayList<>();
+        for (char c : str.toCharArray()) {
+            if (Character.isDigit(c)) {
+                out.add(String.valueOf(c));
+            }
+        }
+        return out;
+    }
+
 }

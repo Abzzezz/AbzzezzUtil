@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2020. Roman P.
+ * All code is owned by Roman P.
+ * Abzzezz Util is used to automate easy tasks.
+ *
+ */
+
 package ga.abzzezz.util.logging;
 
 import javax.swing.*;
@@ -5,22 +12,15 @@ import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.Buffer;
-import java.util.Scanner;
 
 public class Logger {
-
-
 
     public static Object getObjectsFormConsole() {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         Object re = null;
-
-
         String line;
         try {
             while ((line = bufferedReader.readLine()) != null) {
-
                 re = line;
             }
 

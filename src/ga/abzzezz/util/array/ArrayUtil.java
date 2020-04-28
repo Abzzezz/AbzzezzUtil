@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2020. Roman P.
+ * All code is owned by Roman P.
+ * Abzzezz Util is used to automate easy tasks.
+ *
+ */
+
 package ga.abzzezz.util.array;
 
 import ga.abzzezz.util.animations.MathUtil;
@@ -20,7 +27,7 @@ public class ArrayUtil {
             numberCopy.add(num);
         }
 
-        while(numbers.iterator().hasNext()) {
+        while (numbers.iterator().hasNext()) {
             int lowest = MathUtil.getLowest(numbers);
             numbers2.add(lowest);
             numbers.remove(numbers.indexOf(lowest));
@@ -55,7 +62,7 @@ public class ArrayUtil {
             numberCopy.add(num);
         }
 
-        while(numbers.iterator().hasNext()) {
+        while (numbers.iterator().hasNext()) {
             int lowest = MathUtil.getLowest(numbers);
             numbers2.add(lowest);
             numbers.remove(numbers.indexOf(lowest));
