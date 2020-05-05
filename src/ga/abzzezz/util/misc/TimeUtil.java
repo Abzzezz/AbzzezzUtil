@@ -12,7 +12,6 @@ public class TimeUtil {
     private long time;
 
     /**
-     *
      * @param timeOver
      * @return
      */

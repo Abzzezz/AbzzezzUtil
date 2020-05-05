@@ -18,17 +18,17 @@ import java.util.ArrayList;
 public class URLUtil {
 
     public static String getURLContentAsString(URL url) {
-        String out = "";
+        StringBuilder stringBuilder = new StringBuilder();
         try {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                out = out + line;
+                stringBuilder.append(line);
             }
             bufferedReader.close();
-            return out;
+            return stringBuilder.toString();
         } catch (IOException e) {
-            Logger.log("Opening stream to url: " + url.getPath(), Logger.LogType.ERROR);
+            e.printStackTrace();
         }
 
         return "NULL";
@@ -46,6 +46,7 @@ public class URLUtil {
             bufferedReader.close();
             return out;
         } catch (IOException e) {
+            e.printStackTrace();
             Logger.log("Opening stream to url: " + url.getPath(), Logger.LogType.ERROR);
         }
 

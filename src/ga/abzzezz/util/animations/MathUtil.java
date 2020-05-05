@@ -8,6 +8,7 @@
 package ga.abzzezz.util.animations;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class MathUtil {
 
@@ -57,4 +58,9 @@ public class MathUtil {
     public static int getDifference(int num1, int num2) {
         return getBiggest(num1, num2) - getLowest(num1, num2);
     }
+
+    public static int getRandomInt(int bound) {
+        return new Random().nextInt(bound);
+    }
+
 }

@@ -25,7 +25,7 @@ public class AnimationUtil {
 
     public String type;
 
-    private Class<?> classToUse;
+    private final Class<?> classToUse;
 
     public AnimationUtil(final Class<?> classToUse, final float velocity, final float min, final float max, final float step, final boolean animated, final boolean reversed) {
         this.velocity = velocity;
@@ -63,7 +63,7 @@ public class AnimationUtil {
             Method m = classToUse.getMethod("easeInOut", c);
 
             this.velocity = (float) m.invoke(classToUse, time, min, max, max);
-            this.oppositeVelocity = (float) (MathUtil.nabs((float) m.invoke(classToUse, time, min, max, max)));
+            this.oppositeVelocity = MathUtil.nabs((float) m.invoke(classToUse, time, min, max, max));
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
         }
 
@@ -82,10 +82,10 @@ public class AnimationUtil {
     }
 
     public float getFloat() {
-        return (float) velocity;
+        return velocity;
     }
 
     public double getDouble() {
-        return (double) velocity;
+        return velocity;
     }
 }

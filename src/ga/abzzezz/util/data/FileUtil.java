@@ -7,16 +7,23 @@
 
 package ga.abzzezz.util.data;
 
+import ga.abzzezz.util.exceptions.WritingtoFileException;
 import ga.abzzezz.util.logging.Logger;
 
 import java.io.*;
+import java.net.URL;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.List;
 
 public class FileUtil {
 
-    public static ArrayList<String> getFileContentAsList(File file) {
-        ArrayList<String> lines = new ArrayList<>();
+    /**
+     * @param file
+     * @return
+     */
+    public static List<String> getFileContentAsList(File file) {
+        List<String> lines = new ArrayList<>();
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
             String line;
@@ -26,6 +33,7 @@ public class FileUtil {
             }
             bufferedReader.close();
         } catch (IOException e) {
+            e.printStackTrace();
             Logger.log("Reading content from file: " + file + "  " + e.getMessage(), Logger.LogType.ERROR);
         }
         return lines;
@@ -42,6 +50,11 @@ public class FileUtil {
             bufferedWriter.newLine();
             bufferedWriter.close();
         } catch (IOException e) {
+            try {
+                throw new WritingtoFileException();
+            } catch (WritingtoFileException writingtoFileException) {
+                writingtoFileException.printStackTrace();
+            }
             Logger.log("Writing to file: " + out + "  " + e.getMessage(), Logger.LogType.ERROR);
         }
     }
@@ -50,7 +63,7 @@ public class FileUtil {
      * @param in
      * @param out
      */
-    public static void writeArrayListToFile(ArrayList<String> in, File out) {
+    public static void writeArrayListToFile(List<String> in, File out) {
         try {
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(out));
             in.forEach(s -> {
@@ -63,24 +76,36 @@ public class FileUtil {
             });
             bufferedWriter.close();
         } catch (IOException e) {
+            try {
+                throw new WritingtoFileException();
+            } catch (WritingtoFileException writingtoFileException) {
+                writingtoFileException.printStackTrace();
+            }
             Logger.log("Checking file: " + out + "  " + e.getMessage(), Logger.LogType.ERROR);
         }
     }
 
-
-    public static void addToFile(String in, File out) {
+    /**
+     * @param in
+     * @param out
+     */
+    public static void appendToFile(String in, File out, boolean append) {
         try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(out));
-            bufferedWriter.append(in);
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(out, append));
+            bufferedWriter.write(in);
             bufferedWriter.newLine();
             bufferedWriter.close();
         } catch (IOException e) {
-            Logger.logError("Writing to file: " + out + "  " + e.getMessage());
+            try {
+                throw new WritingtoFileException();
+            } catch (WritingtoFileException writingtoFileException) {
+                writingtoFileException.printStackTrace();
+            }
+            Logger.log("Writing to file: " + out + "  " + e.getMessage(), Logger.LogType.ERROR);
         }
     }
 
     /**
-     *
      * @param in
      * @param dest
      * @param delete
@@ -102,6 +127,30 @@ public class FileUtil {
             if (delete) Files.delete(in.toPath());
         } catch (IOException e) {
             Logger.log("Creating new file", Logger.LogType.ERROR);
+        }
+    }
+
+    public static void copyFileFromURL(File outFile, String inURL) {
+        try {
+            InputStream inputStream = new BufferedInputStream(new URL(inURL).openStream());
+            OutputStream out = new BufferedOutputStream(new FileOutputStream(outFile));
+            byte[] buffer = new byte[1024];
+            int lengthRead;
+            while ((lengthRead = inputStream.read(buffer)) > 0) {
+                out.write(buffer, 0, lengthRead);
+                out.flush();
+            }
+            inputStream.close();
+            out.close();
+        } catch (IOException e) {
+            Logger.log("Creating copying File from URL: " + inURL, Logger.LogType.ERROR);
+        }
+    }
+
+    public static void deleteFile(File toDelete) {
+        if (toDelete.exists()) {
+            toDelete.deleteOnExit();
+            Logger.log("File delete state:" + toDelete.delete(), Logger.LogType.INFO);
         }
     }
 }

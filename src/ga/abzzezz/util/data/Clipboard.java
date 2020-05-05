@@ -18,9 +18,7 @@ public class Clipboard {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         try {
             return toolkit.getSystemClipboard().getData(DataFlavor.stringFlavor).toString();
-        } catch (UnsupportedFlavorException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (UnsupportedFlavorException | IOException e) {
             e.printStackTrace();
         }
         return "";

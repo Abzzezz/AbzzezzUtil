@@ -7,14 +7,14 @@
 
 package ga.abzzezz.util.stringing;
 
-import ga.abzzezz.util.logging.Logger;
+import ga.abzzezz.util.exceptions.StringingException;
 
 import java.util.ArrayList;
 
 public class StringUtil {
 
-    /*
-    Needed for all stringing
+    /**
+     * Needed for all stringing
      */
     public static String splitter = ":::";
 
@@ -47,9 +47,23 @@ public class StringUtil {
             }
             return r;
         } catch (ArrayIndexOutOfBoundsException e) {
-            Logger.log("Stringing", Logger.LogType.INFO);
+            try {
+                throw new StringingException();
+            } catch (StringingException stringingException) {
+                stringingException.printStackTrace();
+            }
         }
         return 0;
+    }
+
+    public static int getTotalCharInString(String in, char c) {
+        int counter = 0;
+        for (char c1 : in.toCharArray()) {
+            if (c1 == c) {
+                counter += 1;
+            }
+        }
+        return counter;
     }
 
     /**
@@ -87,6 +101,10 @@ public class StringUtil {
         return sb.toString();
     }
 
+    /**
+     * @param str
+     * @return
+     */
     public static ArrayList<String> getAllNumbersInAString(String str) {
         if (str == null || str.isEmpty()) return null;
         ArrayList<String> out = new ArrayList<>();
@@ -97,5 +115,4 @@ public class StringUtil {
         }
         return out;
     }
-
 }
