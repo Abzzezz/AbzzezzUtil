@@ -13,7 +13,7 @@ public class ClassUtil {
 
     public static Method getMethod(Class c, String method, int mLenght, Class type) {
         for (int i = 0; i < c.getMethods().length; i++) {
-            if (c.getMethods()[i].getName().equalsIgnoreCase("valueOf")) {
+            if (c.getMethods()[i].getName().equalsIgnoreCase(method)) {
                 if (c.getMethods()[i].getParameters().length == mLenght && c.getMethods()[i].getParameters()[0].getType() == type) {
                     Method m = c.getMethods()[i];
                     return m;
