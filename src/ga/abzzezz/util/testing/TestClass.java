@@ -21,6 +21,14 @@ public class TestClass {
     /*
     Class to test functionality
      */
+
+    static int integerout;
+    static float floaout;
+    static double doubleout;
+    static long longout;
+    static String testvalue;
+    static short aShort;
+
     public static void main(String[] args) {
         /*
         Create Data Object
@@ -41,7 +49,13 @@ public class TestClass {
         /*
         Add more data with key and value
          */
-        dataObject.addObject("TestKey", "RandomValue");
+        dataObject.addObject("TestKey", "Value");
+        dataObject.addObject("IntegerKey", Integer.MAX_VALUE);
+        dataObject.addObject("LongKey", Long.MAX_VALUE);
+        dataObject.addObject("FloatKey", Float.MAX_VALUE);
+        dataObject.addObject("DoubleKey", Double.MAX_VALUE);
+        dataObject.addObject("ShortKey", Short.MAX_VALUE);
+
         /*
         File where Data should be stored
          */
@@ -49,12 +63,19 @@ public class TestClass {
         /*
         Write data to file
          */
-
         /*
         Give print data as an array
          */
-        System.out.println(Arrays.toString(DataFormat.decodeToArray(f, "ArrayData")));
-        System.out.println(DataFormat.decode(f, "TestKey"));
+        testvalue = (String) DataFormat.decode(f, "TestKey");
+        integerout = (int) DataFormat.decode(f, "IntegerKey");
+        floaout = (float) DataFormat.decode(f, "FloatKey");
+        doubleout = (double) DataFormat.decode(f, "DoubleKey");
+        longout = (long) DataFormat.decode(f, "LongKey");
+
+        System.out.println(integerout);
+        System.out.println(floaout);
+        System.out.println(doubleout);
+        System.out.println(longout);
 
     }
 }

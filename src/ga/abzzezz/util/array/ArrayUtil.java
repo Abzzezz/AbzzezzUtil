@@ -95,9 +95,7 @@ public class ArrayUtil {
     public static int indexOfKeyword(List<String> in, String keyword) {
         int index = 0;
         for (int i = 0; i < in.size(); i++) {
-            if (in.get(i).contains(keyword))
-                index = i;
-            else index = -1;
+            if (in.get(i).contains(keyword)) index = i;
         }
 
         if (index == -1)
@@ -106,8 +104,6 @@ public class ArrayUtil {
             } catch (KeyNotFoundException e) {
                 e.printStackTrace();
             }
-
         return index;
     }
-
 }

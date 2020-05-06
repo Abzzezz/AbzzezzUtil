@@ -8,10 +8,12 @@
 package ga.abzzezz.util.data.data;
 
 import ga.abzzezz.util.array.ArrayUtil;
+import ga.abzzezz.util.data.ClassUtil;
 import ga.abzzezz.util.data.FileUtil;
 import ga.abzzezz.util.stringing.StringUtil;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,16 +61,24 @@ public class DataFormat {
      */
     public static Object decode(File file, String keyIn) {
         StringBuilder stringBuilder = new StringBuilder();
-        List<String> lines = FileUtil.getFileContentAsList(file);
-        String line = lines.get(ArrayUtil.indexOfKeyword(lines, keyIn));
-        String[] split = getKeyAndValue(line).split(StringUtil.splitter);
-        String value = split[1];
-        if (split[0].equalsIgnoreCase(keyIn)) {
-            if (line.startsWith("ArrayList")) {
-                stringBuilder.append(getArray(line));
-            } else {
-                stringBuilder.append(value);
+        try {
+            List<String> lines = FileUtil.getFileContentAsList(file);
+            String line = lines.get(ArrayUtil.indexOfKeyword(lines, keyIn));
+            String[] split = getKeyAndValue(line).split(StringUtil.splitter);
+            String value = split[1];
+            if (split[0].equalsIgnoreCase(keyIn)) {
+                DataType dataType = getDataType(line);
+                if (dataType == DataType.ARRAY) {
+                    stringBuilder.append(getArray(line));
+                } else if (dataType == DataType.STRING || dataType == DataType.CHARACTER) {
+                    stringBuilder.append(value);
+                } else {
+                    return ClassUtil.getMethod(dataType.aClass, "valueOf", 1, String.class).invoke(dataType.aClass, value);
+                }
             }
+        } catch (IllegalAccessException |
+                InvocationTargetException e) {
+            e.printStackTrace();
         }
         return stringBuilder.toString();
     }
@@ -82,21 +92,27 @@ public class DataFormat {
      */
     public static Object[] decodeToArray(File file, String keyIn) {
         List<Object> re = new ArrayList<>();
-        List<String> lines = FileUtil.getFileContentAsList(file);
-        String line = lines.get(ArrayUtil.indexOfKeyword(lines, keyIn));
-        String[] split = getKeyAndValue(line).split(StringUtil.splitter);
-        String value = split[1];
-        if (split[0].equalsIgnoreCase(keyIn)) {
-            if (line.startsWith("ArrayList")) {
-                for (int i = 0; i < getArray(line).length; i++) {
-                    re.add(getArray(line)[i]);
+        try {
+            List<String> lines = FileUtil.getFileContentAsList(file);
+            String line = lines.get(ArrayUtil.indexOfKeyword(lines, keyIn));
+            String[] split = getKeyAndValue(line).split(StringUtil.splitter);
+            String value = split[1];
+            if (split[0].equalsIgnoreCase(keyIn)) {
+                DataType dataType = getDataType(line);
+                if (dataType == DataType.ARRAY) {
+                    for (int i = 0; i < getArray(line).length; i++) {
+                        re.add(getArray(line)[i]);
+                    }
+                } else if (dataType == DataType.STRING || dataType == DataType.CHARACTER) {
+                    re.add(value);
+                } else {
+                    re.add(ClassUtil.getMethod(dataType.aClass, "valueOf", 1, String.class).invoke(dataType.aClass, value));
                 }
-            } else {
-                re.add(value);
             }
+        } catch (IllegalAccessException |
+                InvocationTargetException e) {
+            e.printStackTrace();
         }
-
-
         return re.toArray();
     }
 
@@ -126,10 +142,41 @@ public class DataFormat {
         return re.toArray();
     }
 
+    private static DataType getDataType(String s) {
+        for (DataType value : DataType.values()) {
+            if (s.startsWith(value.getType())) {
+                return value;
+            }
+        }
+        return null;
+    }
+
     /**
      * Will be used soon
      */
     private enum DataType {
-        STRING, ARRAY, INTEGER, LONG, DOUBLE, FLOAT, BYTE, SHORT, CHARACTER
+        STRING(String.class),
+        ARRAY(ArrayList.class),
+        INTEGER(Integer.class),
+        LONG(Long.class),
+        DOUBLE(Double.class),
+        FLOAT(Float.class),
+        BYTE(Byte.class),
+        SHORT(Short.class),
+        CHARACTER(Character.class);
+
+        Class aClass;
+
+        DataType(Class c) {
+            this.aClass = c;
+        }
+
+        public Class getaClass() {
+            return aClass;
+        }
+
+        public String getType() {
+            return aClass.getSimpleName();
+        }
     }
 }

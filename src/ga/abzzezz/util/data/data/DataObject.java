@@ -25,7 +25,7 @@ public class DataObject {
     }
 
     public void addObject(Object key, Object value) {
-        this.map.put(key, key + ":" + value);
+        this.map.put(value, key + ":" + value);
     }
 
     public void addList(List<?> in, String key) {
