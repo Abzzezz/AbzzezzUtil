@@ -14,6 +14,7 @@ import ga.abzzezz.util.data.data.DataObject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 public class TestClass {
@@ -37,7 +38,7 @@ public class TestClass {
         /*
         Create list
          */
-        List<String> dataIn = new ArrayList<>();
+        List<String> dataIn = new LinkedList<>();
         dataIn.add("data1");
         dataIn.add("data2");
         dataIn.add("data3");
@@ -46,8 +47,10 @@ public class TestClass {
         Add to data Object
          */
         dataObject.addList(dataIn, "ArrayData");
+        dataObject.addArray(new String[] {"tes", "x", "y"}, "Array");
+
         /*
-        Add more data with key and value
+        Add more data with key and valuec
          */
         dataObject.addObject("TestKey", "Value");
         dataObject.addObject("IntegerKey", Integer.MAX_VALUE);
@@ -63,6 +66,8 @@ public class TestClass {
         /*
         Write data to file
          */
+
+        DataFormat.formatData(dataObject, f, false);
         /*
         Give print data as an array
          */
@@ -72,6 +77,8 @@ public class TestClass {
         doubleout = (double) DataFormat.decode(f, "DoubleKey");
         longout = (long) DataFormat.decode(f, "LongKey");
 
+        System.out.println(Arrays.toString(DataFormat.decodeToArray(f, "ArrayData")));
+        System.out.println(testvalue);
         System.out.println(integerout);
         System.out.println(floaout);
         System.out.println(doubleout);

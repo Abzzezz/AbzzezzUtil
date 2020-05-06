@@ -7,14 +7,12 @@
 
 package ga.abzzezz.util.data.data;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 public class DataObject {
-    /**
-     *
-     */
-
     /**
      * Object Type :: key and value
      */
@@ -29,7 +27,11 @@ public class DataObject {
     }
 
     public void addList(List<?> in, String key) {
-        this.map.put(in, key + ":" + in.toString());
+        this.map.put(new ArrayList<>(in), key + ":" + in.toString());
+    }
+
+    public void addArray(Object[] in, String key) {
+        this.map.put(Arrays.asList(in), key + ":" + Arrays.toString(in));
     }
 
     public HashMap<Object, Object> getMap() {
