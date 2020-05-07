@@ -5,7 +5,7 @@
  *
  */
 
-package ga.abzzezz.util.animations;
+package ga.abzzezz.util.math;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -38,7 +38,6 @@ public class MathUtil {
 
     public static int getLowest(ArrayList<Integer> in) {
         int currentLow = Integer.MAX_VALUE;
-
         for (Integer integer : in) {
             if (integer < currentLow) {
                 currentLow = integer;

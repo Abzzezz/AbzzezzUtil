@@ -14,6 +14,10 @@ import java.io.IOException;
 
 public class Clipboard {
 
+    /**
+     * Get Clipboard context
+     * @return
+     */
     public static String getClipboard() {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         try {

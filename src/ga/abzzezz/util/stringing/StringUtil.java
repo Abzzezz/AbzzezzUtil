@@ -15,10 +15,12 @@ public class StringUtil {
 
     /**
      * Needed for all stringing
+     *
      */
     public static String splitter = ":::";
 
     /**
+     * Substring from a point
      * @param in
      * @param toSearch
      * @param endModifire
@@ -36,26 +38,15 @@ public class StringUtil {
      * @return
      */
     public static int getIndexOfCharInStringFromIndex(String in, int startIndex, char find) {
-        try {
-            char[] inCharArray = in.toCharArray();
-            int r = 0;
-            for (int i = startIndex; i < in.length(); i++) {
-                if (inCharArray[i] == find) {
-                    r = i;
-                    break;
-                }
-            }
-            return r;
-        } catch (ArrayIndexOutOfBoundsException e) {
-            try {
-                throw new StringingException();
-            } catch (StringingException stringingException) {
-                stringingException.printStackTrace();
-            }
-        }
-        return 0;
+        return in.indexOf(find, startIndex);
     }
 
+    /**
+     * Get the number of a char appearing in a string
+     * @param in
+     * @param c
+     * @return
+     */
     public static int getTotalCharInString(String in, char c) {
         int counter = 0;
         for (char c1 : in.toCharArray()) {
@@ -78,6 +69,12 @@ public class StringUtil {
         return in;
     }
 
+    /**
+     * Remove all defined not allowed characters from a string
+     * @param in
+     * @param array
+     * @return
+     */
     public static String removenotallowedCharacters(String in, String[] array) {
         for (int i = 0; i < array.length; i++) {
             in = in.replaceAll(array[i], "");
@@ -109,9 +106,7 @@ public class StringUtil {
         if (str == null || str.isEmpty()) return null;
         ArrayList<String> out = new ArrayList<>();
         for (char c : str.toCharArray()) {
-            if (Character.isDigit(c)) {
-                out.add(String.valueOf(c));
-            }
+            if (Character.isDigit(c)) out.add(String.valueOf(c));
         }
         return out;
     }

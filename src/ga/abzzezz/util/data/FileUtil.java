@@ -43,26 +43,6 @@ public class FileUtil {
      * @param in
      * @param out
      */
-    public static void writeToFile(String in, File out) {
-        try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(out));
-            bufferedWriter.write(in);
-            bufferedWriter.newLine();
-            bufferedWriter.close();
-        } catch (IOException e) {
-            try {
-                throw new WritingtoFileException();
-            } catch (WritingtoFileException writingtoFileException) {
-                writingtoFileException.printStackTrace();
-            }
-            Logger.log("Writing to file: " + out + "  " + e.getMessage(), Logger.LogType.ERROR);
-        }
-    }
-
-    /**
-     * @param in
-     * @param out
-     */
     public static void writeArrayListToFile(List<String> in, File out) {
         try {
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(out));

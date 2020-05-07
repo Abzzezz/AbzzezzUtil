@@ -21,6 +21,4 @@ public class DateUtil {
         LocalTime localTime = LocalTime.now();
         return localTime.toString();
     }
-
-
 }

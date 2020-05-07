@@ -5,7 +5,7 @@
  *
  */
 
-package ga.abzzezz.util.animations;
+package ga.abzzezz.util.math;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -17,15 +17,11 @@ import java.lang.reflect.Method;
 
 public class AnimationUtil {
 
-    public float velocity, oppositeVelocity, min, max, step;
-
-    public float time;
-
-    public boolean animated, reversed;
-
-    public String type;
-
     private final Class<?> classToUse;
+    public float velocity, oppositeVelocity, min, max, step;
+    public float time;
+    public boolean animated, reversed;
+    public String type;
 
     public AnimationUtil(final Class<?> classToUse, final float velocity, final float min, final float max, final float step, final boolean animated, final boolean reversed) {
         this.velocity = velocity;
@@ -55,10 +51,7 @@ public class AnimationUtil {
 
         try {
             Class[] c = new Class[4];
-            c[0] = float.class;
-            c[1] = float.class;
-            c[2] = float.class;
-            c[3] = float.class;
+            for (int i = 0; i < c.length; i++) c[i] = float.class;
 
             Method m = classToUse.getMethod("easeInOut", c);
 
@@ -66,7 +59,6 @@ public class AnimationUtil {
             this.oppositeVelocity = MathUtil.nabs((float) m.invoke(classToUse, time, min, max, max));
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
         }
-
     }
 
     public void reset() {

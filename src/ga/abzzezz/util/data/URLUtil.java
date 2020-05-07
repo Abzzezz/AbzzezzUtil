@@ -17,6 +17,11 @@ import java.util.ArrayList;
 
 public class URLUtil {
 
+    /**
+     * Get url content as String
+     * @param url
+     * @return
+     */
     public static String getURLContentAsString(URL url) {
         StringBuilder stringBuilder = new StringBuilder();
         try {
@@ -30,11 +35,14 @@ public class URLUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return "NULL";
     }
 
-
+    /**
+     *
+     * @param url
+     * @return
+     */
     public static ArrayList<String> getURLContentAsArray(URL url) {
         ArrayList<String> out = new ArrayList<>();
         try {
@@ -49,10 +57,15 @@ public class URLUtil {
             e.printStackTrace();
             Logger.log("Opening stream to url: " + url.getPath(), Logger.LogType.ERROR);
         }
-
         return null;
     }
 
+    /**
+     *
+     * @param in
+     * @param protocol
+     * @return
+     */
     public static String toUrl(String in, String protocol) {
         protocol = protocol + "://";
         return protocol + in;

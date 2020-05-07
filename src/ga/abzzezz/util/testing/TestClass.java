@@ -8,12 +8,15 @@
 package ga.abzzezz.util.testing;
 
 
-import ga.abzzezz.util.data.data.DataFormat;
 import ga.abzzezz.util.data.data.DataObject;
+import ga.abzzezz.util.misc.ColorUtil;
 
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -47,7 +50,7 @@ public class TestClass {
         Add to data Object
          */
         dataObject.addList(dataIn, "ArrayData");
-        dataObject.addArray(new String[] {"tes", "x", "y"}, "Array");
+        dataObject.addArray(new String[]{"tes", "x", "y"}, "Array");
 
         /*
         Add more data with key and valuec
@@ -58,7 +61,6 @@ public class TestClass {
         dataObject.addObject("FloatKey", Float.MAX_VALUE);
         dataObject.addObject("DoubleKey", Double.MAX_VALUE);
         dataObject.addObject("ShortKey", Short.MAX_VALUE);
-
         /*
         File where Data should be stored
          */
@@ -67,22 +69,18 @@ public class TestClass {
         Write data to file
          */
 
-        DataFormat.formatData(dataObject, f, false);
+        // DataFormat.formatData(dataObject, f, false);
         /*
         Give print data as an array
          */
+
+        /*
         testvalue = (String) DataFormat.decode(f, "TestKey");
         integerout = (int) DataFormat.decode(f, "IntegerKey");
         floaout = (float) DataFormat.decode(f, "FloatKey");
         doubleout = (double) DataFormat.decode(f, "DoubleKey");
         longout = (long) DataFormat.decode(f, "LongKey");
-
-        System.out.println(Arrays.toString(DataFormat.decodeToArray(f, "ArrayData")));
-        System.out.println(testvalue);
-        System.out.println(integerout);
-        System.out.println(floaout);
-        System.out.println(doubleout);
-        System.out.println(longout);
+         */
 
     }
 }

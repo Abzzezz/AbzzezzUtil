@@ -35,9 +35,7 @@ public class DataFormat {
             String value = split[1];
             array.add(format(o, key, value));
         }
-
         FileUtil.writeArrayListToFile(array, file);
-
     }
 
     /**
@@ -149,6 +147,12 @@ public class DataFormat {
             }
         }
         return null;
+    }
+
+    private static boolean isTypeNumber(DataType dataType) {
+        return dataType == DataType.INTEGER
+                || dataType == DataType.FLOAT || dataType == DataType.LONG || dataType == DataType.DOUBLE
+                || dataType == DataType.BYTE || dataType == DataType.SHORT;
     }
 
     /**

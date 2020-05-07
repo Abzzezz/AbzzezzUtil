@@ -7,7 +7,7 @@
 
 package ga.abzzezz.util.array;
 
-import ga.abzzezz.util.animations.MathUtil;
+import ga.abzzezz.util.math.MathUtil;
 import ga.abzzezz.util.exceptions.KeyNotFoundException;
 import ga.abzzezz.util.stringing.StringUtil;
 
@@ -93,17 +93,17 @@ public class ArrayUtil {
      * @return
      */
     public static int indexOfKeyword(List<String> in, String keyword) {
-        int index = 0;
+        int index = -1;
         for (int i = 0; i < in.size(); i++) {
             if (in.get(i).contains(keyword)) index = i;
         }
-
-        if (index == -1)
+        if(index == -1) {
             try {
                 throw new KeyNotFoundException();
             } catch (KeyNotFoundException e) {
                 e.printStackTrace();
             }
+        }
         return index;
     }
 }
