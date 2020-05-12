@@ -16,6 +16,14 @@ import java.util.List;
 
 public class ArrayUtil {
 
+    /**
+     * Really inefficient, will change soon
+     *
+     * @param in
+     * @return
+     */
+
+    @Deprecated
     public static ArrayList<String> sortWithNumberInName(ArrayList<String> in) {
         ArrayList<String> sorted = new ArrayList<>();
         ArrayList<Integer> numbers = new ArrayList<>();

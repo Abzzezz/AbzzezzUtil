@@ -12,6 +12,7 @@ import ga.abzzezz.util.logging.Logger;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -19,6 +20,7 @@ public class URLUtil {
 
     /**
      * Get url content as String
+     *
      * @param url
      * @return
      */
@@ -39,7 +41,6 @@ public class URLUtil {
     }
 
     /**
-     *
      * @param url
      * @return
      */
@@ -61,7 +62,6 @@ public class URLUtil {
     }
 
     /**
-     *
      * @param in
      * @param protocol
      * @return
@@ -71,4 +71,12 @@ public class URLUtil {
         return protocol + in;
     }
 
+    public static String extractDomainFromURL(String url) {
+        try {
+            return new URL(url).getHost();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
 }

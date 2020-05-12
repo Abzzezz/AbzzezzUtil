@@ -11,6 +11,7 @@ import javax.swing.*;
 
 public class Logger {
 
+    @Deprecated
     public static void logConsole(String name, String in) {
         System.out.println(name + ": " + in);
     }

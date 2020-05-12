@@ -7,6 +7,8 @@
 
 package ga.abzzezz.util.math;
 
+import ga.abzzezz.util.data.ClassUtil;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -50,14 +52,10 @@ public class AnimationUtil {
         }
 
         try {
-            Class[] c = new Class[4];
-            for (int i = 0; i < c.length; i++) c[i] = float.class;
-
-            Method m = classToUse.getMethod("easeInOut", c);
-
+            Method m = ClassUtil.getMethod(classToUse, "easeInOut", new Class[]{float.class, float.class, float.class, float.class});
             this.velocity = (float) m.invoke(classToUse, time, min, max, max);
             this.oppositeVelocity = MathUtil.nabs((float) m.invoke(classToUse, time, min, max, max));
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+        } catch (IllegalAccessException | InvocationTargetException e) {
         }
     }
 

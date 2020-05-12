@@ -24,6 +24,12 @@ public class ColorUtil {
         return new Color(hex).getRGB();
     }
 
+    /**
+     *
+     * @param color
+     * @param amount
+     * @return
+     */
     public static Color lighter(Color color, int amount) {
         for (int i = 0; i < amount; i++) {
             color = color.brighter();
@@ -31,6 +37,12 @@ public class ColorUtil {
         return color;
     }
 
+    /**
+     *
+     * @param color
+     * @param amount
+     * @return
+     */
     public static Color darker(Color color, int amount) {
         for (int i = 0; i < amount; i++) {
             color = color.darker();
@@ -38,6 +50,11 @@ public class ColorUtil {
         return color;
     }
 
+    /**
+     *
+     * @param color
+     * @return
+     */
     public static int invertColor(Color color) {
         return new Color(255 - color.getRed(), 255 - color.getGreen(), 255 - color.getBlue(), 255 - color.getAlpha()).getRGB();
     }
@@ -75,7 +92,10 @@ public class ColorUtil {
         return "0x" + Integer.toHexString(color.getRGB());
     }
 
-    public static void revertPictureColor() {
+    /**
+     * Actually not useful
+     */
+    public static void invertPictureColor() {
         JFileChooser chooser = new JFileChooser();
         chooser.showOpenDialog(null);
 

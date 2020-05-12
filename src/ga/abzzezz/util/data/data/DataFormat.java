@@ -71,7 +71,7 @@ public class DataFormat {
                 } else if (dataType == DataType.STRING || dataType == DataType.CHARACTER) {
                     stringBuilder.append(value);
                 } else {
-                    return ClassUtil.getMethod(dataType.aClass, "valueOf", 1, String.class).invoke(dataType.aClass, value);
+                    return ClassUtil.getMethod(dataType.aClass, "valueOf",  new Class[]{String.class}).invoke(dataType.aClass, value);
                 }
             }
         } catch (IllegalAccessException |
@@ -104,7 +104,7 @@ public class DataFormat {
                 } else if (dataType == DataType.STRING || dataType == DataType.CHARACTER) {
                     re.add(value);
                 } else {
-                    re.add(ClassUtil.getMethod(dataType.aClass, "valueOf", 1, String.class).invoke(dataType.aClass, value));
+                    re.add(ClassUtil.getMethod(dataType.aClass, "valueOf", new Class[]{String.class}).invoke(dataType.aClass, value));
                 }
             }
         } catch (IllegalAccessException |
@@ -149,6 +149,7 @@ public class DataFormat {
         return null;
     }
 
+    @Deprecated
     private static boolean isTypeNumber(DataType dataType) {
         return dataType == DataType.INTEGER
                 || dataType == DataType.FLOAT || dataType == DataType.LONG || dataType == DataType.DOUBLE

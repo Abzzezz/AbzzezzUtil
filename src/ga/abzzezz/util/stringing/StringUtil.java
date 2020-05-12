@@ -37,6 +37,8 @@ public class StringUtil {
      * @param find
      * @return
      */
+
+    @Deprecated
     public static int getIndexOfCharInStringFromIndex(String in, int startIndex, char find) {
         return in.indexOf(find, startIndex);
     }
@@ -50,9 +52,7 @@ public class StringUtil {
     public static int getTotalCharInString(String in, char c) {
         int counter = 0;
         for (char c1 : in.toCharArray()) {
-            if (c1 == c) {
-                counter += 1;
-            }
+            if (c1 == c); ++counter;
         }
         return counter;
     }
@@ -61,7 +61,7 @@ public class StringUtil {
      * @param in
      * @return
      */
-    public static String removenotallowedCharacters(String in) {
+    public static String removeWindowsChars(String in) {
         String[] toRemove = {"\\\\", ":", "\""};
         for (int i = 0; i < toRemove.length; i++) {
             in = in.replaceAll(toRemove[i], "");
@@ -102,6 +102,7 @@ public class StringUtil {
      * @param str
      * @return
      */
+
     public static ArrayList<String> getAllNumbersInAString(String str) {
         if (str == null || str.isEmpty()) return null;
         ArrayList<String> out = new ArrayList<>();
@@ -110,4 +111,6 @@ public class StringUtil {
         }
         return out;
     }
+
+
 }
