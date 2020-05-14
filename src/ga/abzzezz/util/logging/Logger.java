@@ -11,12 +11,7 @@ import javax.swing.*;
 
 public class Logger {
 
-    @Deprecated
-    public static void logConsole(String name, String in) {
-        System.out.println(name + ": " + in);
-    }
-
-    public static String logInput(String in) {
+    public static String logSwingInput(String in) {
         return JOptionPane.showInputDialog(in);
     }
 
@@ -25,7 +20,7 @@ public class Logger {
     }
 
     public enum LogType {
-        ERROR("ERROR"), INFO("INFO"), WARNING("WARNING");
+        ERROR("ERROR"), INFO("INFO"), WARNING("WARNING"), NONE("NONE");
 
         String name;
 

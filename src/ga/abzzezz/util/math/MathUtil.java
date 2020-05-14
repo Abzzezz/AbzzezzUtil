@@ -39,9 +39,18 @@ public class MathUtil {
     public static int getLowest(ArrayList<Integer> in) {
         int currentLow = Integer.MAX_VALUE;
         for (Integer integer : in) {
-            if (integer < currentLow) {
-                currentLow = integer;
-            }
+            if (integer < currentLow) currentLow = integer;
+
+        }
+        return currentLow;
+    }
+
+    @Deprecated
+    public static int getLowestStringArray(ArrayList<String> in) {
+        int currentLow = Integer.MAX_VALUE;
+        for (String integer : in) {
+            int i = Integer.valueOf(integer);
+            if (i < currentLow) currentLow = i;
         }
         return currentLow;
     }

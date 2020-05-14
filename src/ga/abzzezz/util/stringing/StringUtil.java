@@ -7,20 +7,18 @@
 
 package ga.abzzezz.util.stringing;
 
-import ga.abzzezz.util.exceptions.StringingException;
-
 import java.util.ArrayList;
 
 public class StringUtil {
 
     /**
      * Needed for all stringing
-     *
      */
     public static String splitter = ":::";
 
     /**
      * Substring from a point
+     *
      * @param in
      * @param toSearch
      * @param endModifire
@@ -28,23 +26,12 @@ public class StringUtil {
      */
     public static String getStringFromLong(String in, String toSearch, char endModifire) {
         int startIndex = in.indexOf(toSearch) + toSearch.length();
-        return in.substring(startIndex, getIndexOfCharInStringFromIndex(in, startIndex, endModifire));
-    }
-
-    /**
-     * @param in
-     * @param startIndex
-     * @param find
-     * @return
-     */
-
-    @Deprecated
-    public static int getIndexOfCharInStringFromIndex(String in, int startIndex, char find) {
-        return in.indexOf(find, startIndex);
+        return in.substring(startIndex, in.indexOf(startIndex, endModifire));
     }
 
     /**
      * Get the number of a char appearing in a string
+     *
      * @param in
      * @param c
      * @return
@@ -52,7 +39,8 @@ public class StringUtil {
     public static int getTotalCharInString(String in, char c) {
         int counter = 0;
         for (char c1 : in.toCharArray()) {
-            if (c1 == c); ++counter;
+            if (c1 == c)
+                ++counter;
         }
         return counter;
     }
@@ -71,6 +59,7 @@ public class StringUtil {
 
     /**
      * Remove all defined not allowed characters from a string
+     *
      * @param in
      * @param array
      * @return
@@ -87,15 +76,11 @@ public class StringUtil {
      * @return
      */
     public static String extractNumber(String str) {
-        if (str == null || str.isEmpty()) return "";
-        StringBuilder sb = new StringBuilder();
-        for (char c : str.toCharArray()) {
-            if (Character.isDigit(c)) {
-                sb.append(c);
-                break;
-            }
-        }
-        return sb.toString();
+        return str.replaceAll("[^0-9\\.]", "");
+    }
+
+    public static int extractNumberint(String str) {
+        return Integer.valueOf(extractNumber(str));
     }
 
     /**

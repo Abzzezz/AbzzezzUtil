@@ -7,90 +7,57 @@
 
 package ga.abzzezz.util.array;
 
-import ga.abzzezz.util.math.MathUtil;
+import ga.abzzezz.util.data.ClassUtil;
 import ga.abzzezz.util.exceptions.KeyNotFoundException;
 import ga.abzzezz.util.stringing.StringUtil;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ArrayUtil {
 
     /**
-     * Really inefficient, will change soon
+     * Really efficient, new method
      *
      * @param in
      * @return
      */
 
-    @Deprecated
     public static ArrayList<String> sortWithNumberInName(ArrayList<String> in) {
-        ArrayList<String> sorted = new ArrayList<>();
-        ArrayList<Integer> numbers = new ArrayList<>();
-        ArrayList<Integer> numberCopy = new ArrayList<>();
-        ArrayList<Integer> numbers2 = new ArrayList<>();
-
-        for (String s : in) {
-            String numString = s;
-            int num = Integer.valueOf(StringUtil.extractNumber(numString));
-            numbers.add(num);
-            numberCopy.add(num);
-        }
-
-        while (numbers.iterator().hasNext()) {
-            int lowest = MathUtil.getLowest(numbers);
-            numbers2.add(lowest);
-            numbers.remove((Integer) lowest);
-        }
-
-        for (Integer integer : numbers2) {
-            sorted.add(numbers2.indexOf(integer), in.get(numberCopy.indexOf(integer)));
-        }
-
-        numbers.clear();
-        numberCopy.clear();
-        numbers2.clear();
-
-        return sorted;
+        Collections.sort(in, Comparator.comparingInt(StringUtil::extractNumberint));
+        return in;
     }
 
-    /*
-    Used when number is not directly accessible
-    trows index out of bounds when arrayIndex is out of bounds!
+    /**
+     * @param in
+     * @param split
+     * @param arrayIndex
+     * @return
      */
-
-    public static ArrayList<String> sortWithNumberInName(List<String> in, String split, int arrayIndex) {
-        ArrayList<String> sorted = new ArrayList<>();
-        ArrayList<Integer> numbers = new ArrayList<>();
-        ArrayList<Integer> numberCopy = new ArrayList<>();
-        ArrayList<Integer> numbers2 = new ArrayList<>();
-
-        for (String s : in) {
-            String numString = s.split(split)[arrayIndex];
-            int num = Integer.valueOf(StringUtil.extractNumber(numString));
-            numbers.add(num);
-            numberCopy.add(num);
-        }
-
-        while (numbers.iterator().hasNext()) {
-            int lowest = MathUtil.getLowest(numbers);
-            numbers2.add(lowest);
-            numbers.remove((Integer) lowest);
-        }
-
-        for (Integer integer : numbers2) {
-            sorted.add(numbers2.indexOf(integer), in.get(numberCopy.indexOf(integer)));
-        }
-
-        numbers.clear();
-        numberCopy.clear();
-        numbers2.clear();
-
-        return sorted;
+    public static ArrayList<String> sortWithNumberInName(ArrayList<String> in, String split, int arrayIndex) {
+        Collections.sort(in, Comparator.comparingInt(o -> StringUtil.extractNumberint(o.split(split)[arrayIndex])));
+        return in;
     }
 
     public static void removeElement(Object[] arr, int removedIdx) {
         System.arraycopy(arr, removedIdx + 1, arr, removedIdx, arr.length - 1 - removedIdx);
+    }
+
+    public static List<Object> convertStringToObjectArray(List<String> in, Class o) {
+        List<Object> newArray = new ArrayList<>();
+        for (String s : in) {
+            try {
+                newArray.add(ClassUtil.getMethod(o, "valueOf", new Class[]{String.class}).invoke(o, s));
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
+        return newArray;
     }
 
     /**
@@ -105,7 +72,7 @@ public class ArrayUtil {
         for (int i = 0; i < in.size(); i++) {
             if (in.get(i).contains(keyword)) index = i;
         }
-        if(index == -1) {
+        if (index == -1) {
             try {
                 throw new KeyNotFoundException();
             } catch (KeyNotFoundException e) {

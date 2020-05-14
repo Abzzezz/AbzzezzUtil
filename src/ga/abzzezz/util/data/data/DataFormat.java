@@ -149,13 +149,6 @@ public class DataFormat {
         return null;
     }
 
-    @Deprecated
-    private static boolean isTypeNumber(DataType dataType) {
-        return dataType == DataType.INTEGER
-                || dataType == DataType.FLOAT || dataType == DataType.LONG || dataType == DataType.DOUBLE
-                || dataType == DataType.BYTE || dataType == DataType.SHORT;
-    }
-
     /**
      * Will be used soon
      */
