@@ -10,33 +10,90 @@ package ga.abzzezz.util.data.data;
 import ga.abzzezz.util.array.ArrayUtil;
 import ga.abzzezz.util.data.ClassUtil;
 import ga.abzzezz.util.data.FileUtil;
+import ga.abzzezz.util.data.URLUtil;
+import ga.abzzezz.util.logging.Logger;
 import ga.abzzezz.util.stringing.StringUtil;
+import jdk.internal.vm.annotation.Hidden;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DataFormat {
 
+    private URL url;
+    private boolean newLine;
+    private List<String> allBlocks;
+
     /**
-     * Data will be formatted to the "Abzzezz util data format"
+     * Init. Specify file, will be converted to URL
+     *
+     * @param file
+     */
+    public DataFormat(File file) {
+        try {
+            this.url = file.toURI().toURL();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        this.allBlocks = getBlocks();
+    }
+
+    /**
+     * Now possible to read from URLs too
+     *
+     * @param url
+     */
+    public DataFormat(URL url) {
+        this.url = url;
+        this.allBlocks = getBlocks();
+    }
+
+    /**
+     * Data will be formatted to the "Abzzezz util data format" and stored to a file
      *
      * @param data
      * @return
      */
+    public void formatData(DataObject data, File file, boolean append) {
+        FileUtil.writeArrayListToFile(formatDataList(data), file, append, newLine);
+    }
 
-    public static void formatData(DataObject data, File file, boolean append) {
+    /**
+     * Format and add to List
+     *
+     * @param data
+     * @return
+     */
+    public List<String> formatDataList(DataObject data) {
         List<String> array = new ArrayList<>();
         for (Object o : data.getMap().keySet()) {
             String valMap = data.getMap().get(o).toString();
             String[] split = valMap.split(":");
-            String key = split[0];
-            String value = split[1];
-            array.add(format(o, key, value));
+            array.add(format(o, split[0], split[1]));
         }
-        FileUtil.writeArrayListToFile(array, file);
+        return array;
     }
+
+    /**
+     * Append everything to a string, then do whatever
+     *
+     * @param data
+     * @return
+     */
+    public String formatData(DataObject data) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Object o : data.getMap().keySet()) {
+            String valMap = data.getMap().get(o).toString();
+            String[] split = valMap.split(":");
+            stringBuilder.append(format(o, split[0], split[1]));
+        }
+        return stringBuilder.toString();
+    }
+
 
     /**
      * Used to format the final String
@@ -46,82 +103,151 @@ public class DataFormat {
      * @param val
      * @return
      */
-    private static String format(Object o, String key, String val) {
-        return o.getClass().getSimpleName() + "{" + key + StringUtil.splitter + val + "}";
+    private String format(Object o, String key, String val) {
+        return "{" + o.getClass().getSimpleName() + StringUtil.splitter + key + StringUtil.splitter + val + "}";
     }
 
     /**
      * Decode data and give value for specific key.
      *
-     * @param file
      * @param keyIn
      * @return
      */
-    public static Object decode(File file, String keyIn) {
+    public Object decode(String keyIn) {
         StringBuilder stringBuilder = new StringBuilder();
         try {
-            List<String> lines = FileUtil.getFileContentAsList(file);
-            String line = lines.get(ArrayUtil.indexOfKeyword(lines, keyIn));
-            String[] split = getKeyAndValue(line).split(StringUtil.splitter);
-            String value = split[1];
-            if (split[0].equalsIgnoreCase(keyIn)) {
-                DataType dataType = getDataType(line);
-                if (dataType == DataType.ARRAY) {
-                    stringBuilder.append(getArray(line));
-                } else if (dataType == DataType.STRING || dataType == DataType.CHARACTER) {
-                    stringBuilder.append(value);
-                } else {
-                    return ClassUtil.getMethod(dataType.aClass, "valueOf",  new Class[]{String.class}).invoke(dataType.aClass, value);
-                }
+            String value = getValueFromKey(keyIn);
+            DataType dataType = getDataType(getData(keyIn));
+            if (dataType == DataType.ARRAY || dataType == DataType.STRING || dataType == DataType.CHARACTER) {
+                return stringBuilder.append(value).toString();
+            } else {
+                return ClassUtil.getMethod(dataType.aClass, "valueOf", new Class[]{String.class}).invoke(dataType.aClass, value);
             }
-        } catch (IllegalAccessException |
-                InvocationTargetException e) {
+
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            Logger.log("Decoding file", Logger.LogType.ERROR);
             e.printStackTrace();
         }
-        return stringBuilder.toString();
+
+        return null;
     }
 
     /**
-     * Probably extremely inefficient. Will change soon
+     * TODO: Rewrite this
      *
      * @param file
      * @param keyIn
      * @return
      */
-    public static Object[] decodeToArray(File file, String keyIn) {
+    @Deprecated
+    public Object[] decodeToArray(File file, String keyIn) {
         List<Object> re = new ArrayList<>();
         try {
-            List<String> lines = FileUtil.getFileContentAsList(file);
-            String line = lines.get(ArrayUtil.indexOfKeyword(lines, keyIn));
-            String[] split = getKeyAndValue(line).split(StringUtil.splitter);
-            String value = split[1];
-            if (split[0].equalsIgnoreCase(keyIn)) {
-                DataType dataType = getDataType(line);
-                if (dataType == DataType.ARRAY) {
-                    for (int i = 0; i < getArray(line).length; i++) {
-                        re.add(getArray(line)[i]);
-                    }
-                } else if (dataType == DataType.STRING || dataType == DataType.CHARACTER) {
-                    re.add(value);
-                } else {
-                    re.add(ClassUtil.getMethod(dataType.aClass, "valueOf", new Class[]{String.class}).invoke(dataType.aClass, value));
-                }
+            String value = getValueFromKey(keyIn);
+            DataType dataType = getDataType(getData(keyIn));
+
+            if (dataType == DataType.ARRAY) {
+                //     for (int i = 0; i < getArray(line).length; i++) {
+                //       re.add(getArray(line)[i]);
+                //    }
+            } else if (dataType == DataType.STRING || dataType == DataType.CHARACTER) {
+                re.add(value);
+            } else {
+                re.add(ClassUtil.getMethod(dataType.aClass, "valueOf", new Class[]{String.class}).invoke(dataType.aClass, value));
             }
-        } catch (IllegalAccessException |
-                InvocationTargetException e) {
+        } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
         return re.toArray();
     }
 
     /**
-     * @param s
+     * @param keyIn
      * @return
      */
-    private static String getKeyAndValue(String s) {
-        int begin = s.indexOf("{");
-        int end = s.indexOf("}");
-        return s.substring(begin + 1, end);
+    private String getValueFromKey(String keyIn) {
+        return getString(keyIn).split(StringUtil.splitter)[2];
+    }
+
+    /**
+     * @param keyIn
+     * @return
+     */
+    private String getData(String keyIn) {
+        return getString(keyIn).split(StringUtil.splitter)[0];
+    }
+
+    /**
+     * Get block with desired keyword
+     *
+     * @param keyIn
+     * @return
+     */
+    private String getString(String keyIn) {
+        return allBlocks.get(ArrayUtil.indexOfKey(allBlocks, keyIn));
+    }
+
+    /**
+     * Get all blocks from a list.
+     * Block: {DataType:::key:::value}
+     * Blocks can now be stored in one single line, instead of every block having its own line
+     * Eg: {DataType:::key:::value} {DataType:::key:::value} {DataType:::key:::value}
+     * Block 1                  Block2                   Block3
+     *
+     * @return
+     */
+    @Hidden
+    private List<String> getBlocks() {
+        /*
+        Get all lines from url
+         */
+        List<String> lines = URLUtil.getURLContentAsArray(url);
+        //New array to store blocks
+        List<String> blocks = new ArrayList<>();
+        //For every line check for blocks
+        for (String line : lines) {
+            //Get total blocks
+            int blockSize = StringUtil.getTotalCharInString(line, '}');
+            //new stringbuilder for easier deletion
+            StringBuilder builderLine = new StringBuilder(line);
+            //For every block
+            for (int i = 0; i < blockSize; i++) {
+                //Get block bounds
+                int[] blockBounds = getBlock(builderLine.toString());
+                //Add inner block to blocks array
+                blocks.add(getInnerBlock(builderLine.toString()));
+                //Delete old block from builder to new once can be found
+                builderLine.delete(blockBounds[0], blockBounds[1]);
+            }
+        }
+
+        //Return block array
+        return blocks;
+    }
+
+    /**
+     * Get block bounds
+     * {             }
+     * 1             2
+     *
+     * @param string
+     * @return
+     */
+    private int[] getBlock(String string) {
+        int begin = string.indexOf("{");
+        int end = string.indexOf("}");
+        return new int[]{begin, end + 1};
+    }
+
+    /**
+     * Get inner block
+     *
+     * @param string
+     * @return
+     */
+    private String getInnerBlock(String string) {
+        int[] block = getBlock(string);
+        return string.substring(block[0] + 1, block[1] - 1);
     }
 
     /**
@@ -130,27 +256,35 @@ public class DataFormat {
      * @param s
      * @return
      */
-    private static Object[] getArray(String s) {
-        int begin = s.indexOf("[");
-        int end = s.indexOf("]");
-        String s1 = s.substring(begin + 1, end);
+    @Deprecated
+    private Object[] getArray(String s) {
+        String s1 = s.substring(s.indexOf("[") + 1, s.indexOf("]"));
         String[] split = s1.split(",");
-        List<Object> re = new ArrayList<>();
-        for (int i = 0; i < split.length; i++) re.add(split[i]);
-        return re.toArray();
+        Object[] array = new Object[split.length];
+        for (int i = 0; i < split.length; i++) {
+            array[i] = split[i];
+        }
+        return array;
     }
 
-    private static DataType getDataType(String s) {
+    /**
+     * TODO: Change
+     * @param s
+     * @return
+     */
+    private DataType getDataType(String s) {
         for (DataType value : DataType.values()) {
-            if (s.startsWith(value.getType())) {
-                return value;
-            }
+            if (s.equalsIgnoreCase(value.getType())) return value;
         }
         return null;
     }
 
+    public void setNewLine(boolean newLine) {
+        this.newLine = newLine;
+    }
+
     /**
-     * Will be used soon
+     *
      */
     private enum DataType {
         STRING(String.class),

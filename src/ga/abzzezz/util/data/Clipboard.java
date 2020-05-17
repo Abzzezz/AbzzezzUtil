@@ -16,6 +16,7 @@ public class Clipboard {
 
     /**
      * Get Clipboard context
+     *
      * @return
      */
     public static String getClipboard() {

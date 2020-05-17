@@ -8,16 +8,14 @@
 package ga.abzzezz.util.testing;
 
 
-import ga.abzzezz.util.array.ArrayUtil;
-import ga.abzzezz.util.math.MathUtil;
+import ga.abzzezz.util.data.data.DataFormat;
+import ga.abzzezz.util.data.data.DataObject;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
 
 public class TestClass {
-
-    /*
-    Class to test functionality
 
 
     static int integerout;
@@ -27,12 +25,10 @@ public class TestClass {
     static String testvalue;
     static short aShort;
 
-*/
 
     public static void main(String[] args) {
-
-    /*
         DataObject dataObject = new DataObject();
+
 
         List<String> dataIn = new LinkedList<>();
         dataIn.add("data1");
@@ -40,9 +36,7 @@ public class TestClass {
         dataIn.add("data3");
 
 
-        dataObject.addList(dataIn, "ArrayData");
-        dataObject.addArray(new String[]{"tes", "x", "y"}, "Array");
-
+        dataObject.addArray(new String[]{"[tes", "x", "y]"}, "Array");
 
         dataObject.addObject("TestKey", "Value");
         dataObject.addObject("IntegerKey", Integer.MAX_VALUE);
@@ -50,23 +44,20 @@ public class TestClass {
         dataObject.addObject("FloatKey", Float.MAX_VALUE);
         dataObject.addObject("DoubleKey", Double.MAX_VALUE);
         dataObject.addObject("ShortKey", Short.MAX_VALUE);
-
         File f = new File(System.getProperty("user.home"), "text.txt");
 
+        DataFormat dataFormat = new DataFormat(f);
 
-        DataFormat.formatData(dataObject, f, false);
 
-        testvalue = (String) DataFormat.decode(f, "TestKey");
-        integerout = (int) DataFormat.decode(f, "IntegerKey");
-        floaout = (float) DataFormat.decode(f, "FloatKey");
-        doubleout = (double) DataFormat.decode(f, "DoubleKey");
-        longout = (long) DataFormat.decode(f, "LongKey");
+        testvalue = (String) dataFormat.decode("TestKey");
+        integerout = (int) dataFormat.decode("IntegerKey");
+        floaout = (float) dataFormat.decode("FloatKey");
+        doubleout = (double) dataFormat.decode("DoubleKey");
 
         System.out.println(testvalue);
         System.out.println(integerout);
         System.out.println(floaout);
         System.out.println(doubleout);
 
-        */
     }
 }

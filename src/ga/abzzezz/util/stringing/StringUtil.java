@@ -87,7 +87,6 @@ public class StringUtil {
      * @param str
      * @return
      */
-
     public static ArrayList<String> getAllNumbersInAString(String str) {
         if (str == null || str.isEmpty()) return null;
         ArrayList<String> out = new ArrayList<>();
@@ -96,6 +95,4 @@ public class StringUtil {
         }
         return out;
     }
-
-
 }

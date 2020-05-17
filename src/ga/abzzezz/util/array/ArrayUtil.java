@@ -25,7 +25,6 @@ public class ArrayUtil {
      * @param in
      * @return
      */
-
     public static ArrayList<String> sortWithNumberInName(ArrayList<String> in) {
         Collections.sort(in, Comparator.comparingInt(StringUtil::extractNumberint));
         return in;
@@ -38,7 +37,8 @@ public class ArrayUtil {
      * @return
      */
     public static ArrayList<String> sortWithNumberInName(ArrayList<String> in, String split, int arrayIndex) {
-        Collections.sort(in, Comparator.comparingInt(o -> StringUtil.extractNumberint(o.split(split)[arrayIndex])));
+        //if split length < arrayIndex sort 0 to avoid errors
+        Collections.sort(in, Comparator.comparingInt(o -> StringUtil.extractNumberint((o.split(split).length > arrayIndex) ? o.split(split)[arrayIndex] : "0")));
         return in;
     }
 
@@ -46,6 +46,11 @@ public class ArrayUtil {
         System.arraycopy(arr, removedIdx + 1, arr, removedIdx, arr.length - 1 - removedIdx);
     }
 
+    /**
+     * @param in
+     * @param o
+     * @return
+     */
     public static List<Object> convertStringToObjectArray(List<String> in, Class o) {
         List<Object> newArray = new ArrayList<>();
         for (String s : in) {
@@ -67,10 +72,25 @@ public class ArrayUtil {
      * @param keyword
      * @return
      */
-    public static int indexOfKeyword(List<String> in, String keyword) {
+    public static int indexOfKey(List<String> in, String keyword) {
         int index = -1;
         for (int i = 0; i < in.size(); i++) {
             if (in.get(i).contains(keyword)) index = i;
+        }
+        if (index == -1) {
+            try {
+                throw new KeyNotFoundException();
+            } catch (KeyNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        return index;
+    }
+
+    public static int indexOfKey(String[] in, String keyword) {
+        int index = -1;
+        for (int i = 0; i < in.length; i++) {
+            if (in[i].contains(keyword)) index = i;
         }
         if (index == -1) {
             try {

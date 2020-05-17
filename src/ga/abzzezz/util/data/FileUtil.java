@@ -39,17 +39,39 @@ public class FileUtil {
         return lines;
     }
 
+
+    /**
+     * @param file
+     * @return
+     */
+    public static String getFileContentAsString(File file) {
+        StringBuilder stringBuilder = new StringBuilder();
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+            String line;
+
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+            bufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Logger.log("Reading content from file: " + file + "  " + e.getMessage(), Logger.LogType.ERROR);
+        }
+        return stringBuilder.toString();
+    }
+
     /**
      * @param in
      * @param out
      */
-    public static void writeArrayListToFile(List<String> in, File out) {
+    public static void writeArrayListToFile(List<String> in, File out, boolean append, boolean newLine) {
         try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(out));
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(out, append));
             in.forEach(s -> {
                 try {
                     bufferedWriter.write(s);
-                    bufferedWriter.newLine();
+                    if (newLine) bufferedWriter.newLine();
                 } catch (IOException e) {
                     Logger.log("Writing to file: " + out + "  " + e.getMessage(), Logger.LogType.ERROR);
                 }

@@ -25,7 +25,6 @@ public class ColorUtil {
     }
 
     /**
-     *
      * @param color
      * @param amount
      * @return
@@ -38,7 +37,6 @@ public class ColorUtil {
     }
 
     /**
-     *
      * @param color
      * @param amount
      * @return
@@ -51,7 +49,6 @@ public class ColorUtil {
     }
 
     /**
-     *
      * @param color
      * @return
      */
