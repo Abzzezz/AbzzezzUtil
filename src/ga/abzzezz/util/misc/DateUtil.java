@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2020. Roman P.
- * All code is owned by Roman P.
+ * @author Roman P.
  * Abzzezz Util is used to automate easy tasks.
  *
  */
@@ -12,11 +11,19 @@ import java.time.LocalTime;
 
 public class DateUtil {
 
+    /**
+     *
+     * @return
+     */
     public static String getCurrentDay() {
         LocalDate date = LocalDate.now();
         return date.toString();
     }
 
+    /**
+     *
+     * @return
+     */
     public static String getTimeAndMS() {
         LocalTime localTime = LocalTime.now();
         return localTime.toString();

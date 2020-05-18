@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2020. Roman P.
- * All code is owned by Roman P.
+ * @author Roman P.
  * Abzzezz Util is used to automate easy tasks.
  *
  */
@@ -9,6 +8,9 @@ package ga.abzzezz.util.stringing;
 
 import java.util.ArrayList;
 
+/**
+ * Used for all types of String work
+ */
 public class StringUtil {
 
     /**
@@ -72,6 +74,8 @@ public class StringUtil {
     }
 
     /**
+     * Extracts numbher from string
+     * @see ga.abzzezz.util.array.ArrayUtil
      * @param str
      * @return
      */
@@ -79,14 +83,21 @@ public class StringUtil {
         return str.replaceAll("[^0-9\\.]", "");
     }
 
+    /**
+     * Returns number instead of string
+     * @param str
+     * @return
+     */
     public static int extractNumberint(String str) {
         return Integer.valueOf(extractNumber(str));
     }
 
     /**
+     * Inefficient method also only works with numbers 0 - 9
      * @param str
      * @return
      */
+    @Deprecated
     public static ArrayList<String> getAllNumbersInAString(String str) {
         if (str == null || str.isEmpty()) return null;
         ArrayList<String> out = new ArrayList<>();

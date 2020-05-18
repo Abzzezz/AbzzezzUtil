@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2020. Roman P.
- * All code is owned by Roman P.
+ * @author Roman P.
  * Abzzezz Util is used to automate easy tasks.
  *
  */
@@ -15,6 +14,10 @@ import java.lang.reflect.Method;
 /**
  * @author: trey & Abzzezz
  * @created on: 22.07.2018 16:25:46
+ */
+
+/**
+ * Used to calculate animations
  */
 
 public class AnimationUtil {

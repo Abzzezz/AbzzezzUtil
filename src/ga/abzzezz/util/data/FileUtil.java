@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2020. Roman P.
- * All code is owned by Roman P.
+ * @author Roman P.
  * Abzzezz Util is used to automate easy tasks.
  *
  */
@@ -19,6 +18,7 @@ import java.util.List;
 public class FileUtil {
 
     /**
+     * Gets file content as list
      * @param file
      * @return
      */
@@ -62,8 +62,11 @@ public class FileUtil {
     }
 
     /**
+     *
      * @param in
      * @param out
+     * @param append
+     * @param newLine
      */
     public static void writeArrayListToFile(List<String> in, File out, boolean append, boolean newLine) {
         try {
@@ -88,8 +91,10 @@ public class FileUtil {
     }
 
     /**
+     *
      * @param in
      * @param out
+     * @param append
      */
     public static void appendToFile(String in, File out, boolean append) {
         try {
@@ -132,6 +137,11 @@ public class FileUtil {
         }
     }
 
+    /**
+     * Copy file from url method. Reads bytes from url and stores them into a file
+     * @param outFile
+     * @param inURL
+     */
     public static void copyFileFromURL(File outFile, String inURL) {
         try {
             InputStream inputStream = new BufferedInputStream(new URL(inURL).openStream());
@@ -149,6 +159,10 @@ public class FileUtil {
         }
     }
 
+    /**
+     * Deletes file
+     * @param toDelete
+     */
     public static void deleteFile(File toDelete) {
         if (toDelete.exists()) {
             toDelete.deleteOnExit();

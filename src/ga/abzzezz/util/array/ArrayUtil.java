@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2020. Roman P.
- * All code is owned by Roman P.
+ * @author Roman P.
  * Abzzezz Util is used to automate easy tasks.
  *
  */
@@ -17,11 +16,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Used to handle array tasks such as sorting, deleting elements etc.
+ */
 public class ArrayUtil {
 
     /**
-     * Really efficient, new method
-     *
+     * Uses Comparator comparing
+     * @see Comparator
      * @param in
      * @return
      */
@@ -51,6 +53,7 @@ public class ArrayUtil {
      * @param o
      * @return
      */
+    @Deprecated
     public static List<Object> convertStringToObjectArray(List<String> in, Class o) {
         List<Object> newArray = new ArrayList<>();
         for (String s : in) {
@@ -87,6 +90,12 @@ public class ArrayUtil {
         return index;
     }
 
+    /**
+     * Same as the list method, uses arrays instead
+     * @param in
+     * @param keyword
+     * @return
+     */
     public static int indexOfKey(String[] in, String keyword) {
         int index = -1;
         for (int i = 0; i < in.length; i++) {

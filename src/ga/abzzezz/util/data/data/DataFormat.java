@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2020. Roman P.
- * All code is owned by Roman P.
+ * @author Roman P.
  * Abzzezz Util is used to automate easy tasks.
  *
  */
@@ -13,7 +12,6 @@ import ga.abzzezz.util.data.FileUtil;
 import ga.abzzezz.util.data.URLUtil;
 import ga.abzzezz.util.logging.Logger;
 import ga.abzzezz.util.stringing.StringUtil;
-import jdk.internal.vm.annotation.Hidden;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -22,11 +20,23 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class to format and decode data blocks
+ * Takes in a file or url and converts it to an url
+ */
 public class DataFormat {
 
+    /**
+     * Headers
+     */
+    //URL to read from
     private URL url;
+    //Should new lines be created, used for storing to a file
     private boolean newLine;
+    //List of all blocks to optimize decoding. Gets stored as soon as the constructor is called
     private List<String> allBlocks;
+    //BlockFormatter instance
+    private BlockFormatter blockFormatter = new BlockFormatter();
 
     /**
      * Init. Specify file, will be converted to URL
@@ -52,6 +62,11 @@ public class DataFormat {
         this.allBlocks = getBlocks();
     }
 
+
+    /**
+     * Format Data methods
+     */
+
     /**
      * Data will be formatted to the "Abzzezz util data format" and stored to a file
      *
@@ -73,7 +88,7 @@ public class DataFormat {
         for (Object o : data.getMap().keySet()) {
             String valMap = data.getMap().get(o).toString();
             String[] split = valMap.split(":");
-            array.add(format(o, split[0], split[1]));
+            array.add(blockFormatter.formatBlock(o, split[0], split[1]));
         }
         return array;
     }
@@ -89,23 +104,15 @@ public class DataFormat {
         for (Object o : data.getMap().keySet()) {
             String valMap = data.getMap().get(o).toString();
             String[] split = valMap.split(":");
-            stringBuilder.append(format(o, split[0], split[1]));
+            stringBuilder.append(blockFormatter.formatBlock(o, split[0], split[1]));
         }
         return stringBuilder.toString();
     }
 
 
     /**
-     * Used to format the final String
-     *
-     * @param o
-     * @param key
-     * @param val
-     * @return
+     * Decoding
      */
-    private String format(Object o, String key, String val) {
-        return "{" + o.getClass().getSimpleName() + StringUtil.splitter + key + StringUtil.splitter + val + "}";
-    }
 
     /**
      * Decode data and give value for specific key.
@@ -114,16 +121,14 @@ public class DataFormat {
      * @return
      */
     public Object decode(String keyIn) {
-        StringBuilder stringBuilder = new StringBuilder();
         try {
             String value = getValueFromKey(keyIn);
             DataType dataType = getDataType(getData(keyIn));
             if (dataType == DataType.ARRAY || dataType == DataType.STRING || dataType == DataType.CHARACTER) {
-                return stringBuilder.append(value).toString();
+                return value;
             } else {
                 return ClassUtil.getMethod(dataType.aClass, "valueOf", new Class[]{String.class}).invoke(dataType.aClass, value);
             }
-
         } catch (IllegalAccessException | InvocationTargetException e) {
             Logger.log("Decoding file", Logger.LogType.ERROR);
             e.printStackTrace();
@@ -133,35 +138,33 @@ public class DataFormat {
     }
 
     /**
+     * Decodes values to object array
      * TODO: Rewrite this
      *
-     * @param file
      * @param keyIn
      * @return
      */
-    @Deprecated
-    public Object[] decodeToArray(File file, String keyIn) {
-        List<Object> re = new ArrayList<>();
+    public Object[] decodeToArray(String keyIn) {
+        Object[] array = new Object[1];
         try {
             String value = getValueFromKey(keyIn);
             DataType dataType = getDataType(getData(keyIn));
-
             if (dataType == DataType.ARRAY) {
-                //     for (int i = 0; i < getArray(line).length; i++) {
-                //       re.add(getArray(line)[i]);
-                //    }
-            } else if (dataType == DataType.STRING || dataType == DataType.CHARACTER) {
-                re.add(value);
+                array = regenerateArray(value);
             } else {
-                re.add(ClassUtil.getMethod(dataType.aClass, "valueOf", new Class[]{String.class}).invoke(dataType.aClass, value));
+                array[0] = (dataType == DataType.STRING ||
+                        dataType == DataType.CHARACTER) ? array[0] = value : ClassUtil.getMethod(dataType.aClass, "valueOf", new Class[]{String.class}).invoke(dataType.aClass, value);
             }
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
-        return re.toArray();
+        return array;
     }
 
+
     /**
+     * Get value from block
+     * @getString
      * @param keyIn
      * @return
      */
@@ -170,6 +173,7 @@ public class DataFormat {
     }
 
     /**
+     * Get datatype from block
      * @param keyIn
      * @return
      */
@@ -196,7 +200,6 @@ public class DataFormat {
      *
      * @return
      */
-    @Hidden
     private List<String> getBlocks() {
         /*
         Get all lines from url
@@ -207,16 +210,16 @@ public class DataFormat {
         //For every line check for blocks
         for (String line : lines) {
             //Get total blocks
-            int blockSize = StringUtil.getTotalCharInString(line, '}');
+            int blockSize = blockFormatter.getBlockElements(line);
             //new stringbuilder for easier deletion
             StringBuilder builderLine = new StringBuilder(line);
-            //For every block
             for (int i = 0; i < blockSize; i++) {
+                Block block = new Block(builderLine.toString());
                 //Get block bounds
-                int[] blockBounds = getBlock(builderLine.toString());
+                int[] blockBounds = block.getBlock();
                 //Add inner block to blocks array
-                blocks.add(getInnerBlock(builderLine.toString()));
-                //Delete old block from builder to new once can be found
+                blocks.add(block.getInnerBlock());
+                //Delete old block from builder so new once can be found
                 builderLine.delete(blockBounds[0], blockBounds[1]);
             }
         }
@@ -225,30 +228,6 @@ public class DataFormat {
         return blocks;
     }
 
-    /**
-     * Get block bounds
-     * {             }
-     * 1             2
-     *
-     * @param string
-     * @return
-     */
-    private int[] getBlock(String string) {
-        int begin = string.indexOf("{");
-        int end = string.indexOf("}");
-        return new int[]{begin, end + 1};
-    }
-
-    /**
-     * Get inner block
-     *
-     * @param string
-     * @return
-     */
-    private String getInnerBlock(String string) {
-        int[] block = getBlock(string);
-        return string.substring(block[0] + 1, block[1] - 1);
-    }
 
     /**
      * Formats intended array String back to array
@@ -256,19 +235,18 @@ public class DataFormat {
      * @param s
      * @return
      */
-    @Deprecated
-    private Object[] getArray(String s) {
+
+    private Object[] regenerateArray(String s) {
         String s1 = s.substring(s.indexOf("[") + 1, s.indexOf("]"));
         String[] split = s1.split(",");
         Object[] array = new Object[split.length];
-        for (int i = 0; i < split.length; i++) {
-            array[i] = split[i];
-        }
+        for (int i = 0; i < split.length; i++) { array[i] = split[i]; }
         return array;
     }
 
     /**
-     * TODO: Change
+     * Check if string "s" is equal to one of the available data types
+     *
      * @param s
      * @return
      */
@@ -284,7 +262,7 @@ public class DataFormat {
     }
 
     /**
-     *
+     * Enum for DataTypes
      */
     private enum DataType {
         STRING(String.class),
@@ -305,6 +283,16 @@ public class DataFormat {
 
         public Class getaClass() {
             return aClass;
+        }
+
+        /**
+         * Will be used in the near future
+         * @param dataType
+         * @return
+         */
+        public boolean isDataChar(DataType dataType) {
+            return dataType == DataType.STRING ||
+                    dataType == DataType.CHARACTER;
         }
 
         public String getType() {

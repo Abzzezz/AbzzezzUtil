@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2020. Roman P.
- * All code is owned by Roman P.
+ * @author Roman P.
  * Abzzezz Util is used to automate easy tasks.
  *
  */
@@ -10,6 +9,9 @@ package ga.abzzezz.util.math;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Util for simple math tasks
+ */
 public class MathUtil {
 
     public static float abs(final float num) {

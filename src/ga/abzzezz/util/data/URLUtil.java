@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2020. Roman P.
- * All code is owned by Roman P.
+ * @author Roman P.
  * Abzzezz Util is used to automate easy tasks.
  *
  */
@@ -41,6 +40,7 @@ public class URLUtil {
     }
 
     /**
+     * Stores all lines from an url into an array
      * @param url
      * @return
      */
@@ -62,6 +62,7 @@ public class URLUtil {
     }
 
     /**
+     * Convert string to url
      * @param in
      * @param protocol
      * @return
@@ -71,6 +72,11 @@ public class URLUtil {
         return protocol + in;
     }
 
+    /**
+     * Get domain from url
+     * @param url
+     * @return
+     */
     public static String extractDomainFromURL(String url) {
         try {
             return new URL(url).getHost();

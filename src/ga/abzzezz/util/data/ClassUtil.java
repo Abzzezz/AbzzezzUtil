@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2020. Roman P.
- * All code is owned by Roman P.
+ * @author Roman P.
  * Abzzezz Util is used to automate easy tasks.
  *
  */
@@ -9,6 +8,10 @@ package ga.abzzezz.util.data;
 
 import java.lang.reflect.Method;
 
+/**
+ * Util to invoke get methods for now
+ * @version 1.0
+ */
 public class ClassUtil {
 
     /**

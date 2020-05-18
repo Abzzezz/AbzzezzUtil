@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2020. Roman P.
- * All code is owned by Roman P.
+ * @author Roman P.
  * Abzzezz Util is used to automate easy tasks.
  *
  */
@@ -25,10 +24,13 @@ public class TestClass {
     static String testvalue;
     static short aShort;
 
-
+    /**
+     *
+     * testing class
+     * @param args
+     */
     public static void main(String[] args) {
         DataObject dataObject = new DataObject();
-
 
         List<String> dataIn = new LinkedList<>();
         dataIn.add("data1");
@@ -36,7 +38,7 @@ public class TestClass {
         dataIn.add("data3");
 
 
-        dataObject.addArray(new String[]{"[tes", "x", "y]"}, "Array");
+        dataObject.addArray(new String[]{"tes", "x", "y]"}, "Array");
 
         dataObject.addObject("TestKey", "Value");
         dataObject.addObject("IntegerKey", Integer.MAX_VALUE);
@@ -47,7 +49,7 @@ public class TestClass {
         File f = new File(System.getProperty("user.home"), "text.txt");
 
         DataFormat dataFormat = new DataFormat(f);
-
+        dataFormat.formatData(dataObject, f, false);
 
         testvalue = (String) dataFormat.decode("TestKey");
         integerout = (int) dataFormat.decode("IntegerKey");
@@ -58,6 +60,6 @@ public class TestClass {
         System.out.println(integerout);
         System.out.println(floaout);
         System.out.println(doubleout);
-
+        System.out.println(dataFormat.decodeToArray("Array")[0]);
     }
 }

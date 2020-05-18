@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2020. Roman P.
- * All code is owned by Roman P.
+ * @author Roman P.
  * Abzzezz Util is used to automate easy tasks.
  *
  */
@@ -12,6 +11,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Data Object
+ *
+ */
 public class DataObject {
     /**
      * Object Type :: key and value
