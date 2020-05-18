@@ -7,14 +7,10 @@
 package ga.abzzezz.util.array;
 
 import ga.abzzezz.util.data.ClassUtil;
-import ga.abzzezz.util.exceptions.KeyNotFoundException;
 import ga.abzzezz.util.stringing.StringUtil;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Used to handle array tasks such as sorting, deleting elements etc.
@@ -23,9 +19,10 @@ public class ArrayUtil {
 
     /**
      * Uses Comparator comparing
-     * @see Comparator
+     *
      * @param in
      * @return
+     * @see Comparator
      */
     public static ArrayList<String> sortWithNumberInName(ArrayList<String> in) {
         Collections.sort(in, Comparator.comparingInt(StringUtil::extractNumberint));
@@ -76,38 +73,17 @@ public class ArrayUtil {
      * @return
      */
     public static int indexOfKey(List<String> in, String keyword) {
-        int index = -1;
-        for (int i = 0; i < in.size(); i++) {
-            if (in.get(i).contains(keyword)) index = i;
-        }
-        if (index == -1) {
-            try {
-                throw new KeyNotFoundException();
-            } catch (KeyNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-        return index;
+        return in.indexOf(in.stream().filter(s -> s.contains(keyword)).findFirst().get());
     }
 
     /**
      * Same as the list method, uses arrays instead
+     *
      * @param in
      * @param keyword
      * @return
      */
     public static int indexOfKey(String[] in, String keyword) {
-        int index = -1;
-        for (int i = 0; i < in.length; i++) {
-            if (in[i].contains(keyword)) index = i;
-        }
-        if (index == -1) {
-            try {
-                throw new KeyNotFoundException();
-            } catch (KeyNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-        return index;
+        return indexOfKey(Arrays.asList(in), keyword);
     }
 }

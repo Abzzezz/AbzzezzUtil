@@ -32,11 +32,11 @@ public class DataFormat {
     //URL to read from
     private URL url;
     //Should new lines be created, used for storing to a file
-    private boolean newLine;
+    private static boolean newLine;
     //List of all blocks to optimize decoding. Gets stored as soon as the constructor is called
     private List<String> allBlocks;
     //BlockFormatter instance
-    private BlockFormatter blockFormatter = new BlockFormatter();
+    private static BlockFormatter blockFormatter = new BlockFormatter();
 
     /**
      * Init. Specify file, will be converted to URL
@@ -73,7 +73,7 @@ public class DataFormat {
      * @param data
      * @return
      */
-    public void formatData(DataObject data, File file, boolean append) {
+    public static void formatData(DataObject data, File file, boolean append) {
         FileUtil.writeArrayListToFile(formatDataList(data), file, append, newLine);
     }
 
@@ -83,7 +83,7 @@ public class DataFormat {
      * @param data
      * @return
      */
-    public List<String> formatDataList(DataObject data) {
+    public static List<String> formatDataList(DataObject data) {
         List<String> array = new ArrayList<>();
         for (Object o : data.getMap().keySet()) {
             String valMap = data.getMap().get(o).toString();
@@ -99,7 +99,7 @@ public class DataFormat {
      * @param data
      * @return
      */
-    public String formatData(DataObject data) {
+    public static String formatData(DataObject data) {
         StringBuilder stringBuilder = new StringBuilder();
         for (Object o : data.getMap().keySet()) {
             String valMap = data.getMap().get(o).toString();

@@ -39,12 +39,7 @@ public class StringUtil {
      * @return
      */
     public static int getTotalCharInString(String in, char c) {
-        int counter = 0;
-        for (char c1 : in.toCharArray()) {
-            if (c1 == c)
-                ++counter;
-        }
-        return counter;
+        return (int) in.chars().filter(value -> value == c).count();
     }
 
     /**

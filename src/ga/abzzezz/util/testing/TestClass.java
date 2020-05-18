@@ -47,9 +47,10 @@ public class TestClass {
         dataObject.addObject("DoubleKey", Double.MAX_VALUE);
         dataObject.addObject("ShortKey", Short.MAX_VALUE);
         File f = new File(System.getProperty("user.home"), "text.txt");
+        DataFormat.formatData(dataObject, f, false);
+
 
         DataFormat dataFormat = new DataFormat(f);
-        dataFormat.formatData(dataObject, f, false);
 
         testvalue = (String) dataFormat.decode("TestKey");
         integerout = (int) dataFormat.decode("IntegerKey");
