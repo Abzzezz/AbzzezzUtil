@@ -13,9 +13,13 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Util for color stuff
+ */
 public class ColorUtil {
 
     /**
+     * Convert hex to RGB
      * @param hex
      * @return
      */
@@ -24,30 +28,29 @@ public class ColorUtil {
     }
 
     /**
+     * Make color lighter by certain amount
      * @param color
      * @param amount
      * @return
      */
     public static Color lighter(Color color, int amount) {
-        for (int i = 0; i < amount; i++) {
-            color = color.brighter();
-        }
+        for (int i = 0; i < amount; i++) color = color.brighter();
         return color;
     }
 
     /**
+     * Make color darker by certain amount
      * @param color
      * @param amount
      * @return
      */
     public static Color darker(Color color, int amount) {
-        for (int i = 0; i < amount; i++) {
-            color = color.darker();
-        }
+        for (int i = 0; i < amount; i++) color = color.darker();
         return color;
     }
 
     /**
+     * Invert color
      * @param color
      * @return
      */
@@ -56,6 +59,7 @@ public class ColorUtil {
     }
 
     /**
+     * Add Alpha to color
      * @param color
      * @param alpha
      * @return
@@ -65,6 +69,7 @@ public class ColorUtil {
     }
 
     /**
+     * convert color to integer
      * @param color
      * @return
      */
@@ -81,6 +86,7 @@ public class ColorUtil {
     }
 
     /**
+     * convert to hexadecimal string
      * @param color
      * @return
      */
@@ -104,7 +110,7 @@ public class ColorUtil {
                     bufferedImage.setRGB(i1, i, ColorUtil.invertColor(new Color(bufferedImage.getRGB(i1, i))));
                 }
             }
-            ImageIO.write(bufferedImage, "png", new File(System.getProperty("user.home"), "penis.png"));
+            ImageIO.write(bufferedImage, "png", new File(System.getProperty("user.home"), "out.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }

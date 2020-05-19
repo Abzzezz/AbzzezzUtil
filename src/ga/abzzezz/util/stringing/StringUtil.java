@@ -6,8 +6,6 @@
 
 package ga.abzzezz.util.stringing;
 
-import java.util.ArrayList;
-
 /**
  * Used for all types of String work
  */
@@ -32,7 +30,7 @@ public class StringUtil {
     }
 
     /**
-     * Get the number of a char appearing in a string
+     * count all appearing char instances in a string
      *
      * @param in
      * @param c
@@ -43,6 +41,8 @@ public class StringUtil {
     }
 
     /**
+     * Remove all in Windows not allowed characters
+     *
      * @param in
      * @return
      */
@@ -70,35 +70,21 @@ public class StringUtil {
 
     /**
      * Extracts numbher from string
-     * @see ga.abzzezz.util.array.ArrayUtil
+     *
      * @param str
      * @return
+     * @see ga.abzzezz.util.array.ArrayUtil
      */
     public static String extractNumber(String str) {
         return str.replaceAll("[^0-9\\.]", "");
     }
 
     /**
-     * Returns number instead of string
+     * Returns int instead of string
      * @param str
      * @return
      */
-    public static int extractNumberint(String str) {
+    public static int extractNumberI(String str) {
         return Integer.valueOf(extractNumber(str));
-    }
-
-    /**
-     * Inefficient method also only works with numbers 0 - 9
-     * @param str
-     * @return
-     */
-    @Deprecated
-    public static ArrayList<String> getAllNumbersInAString(String str) {
-        if (str == null || str.isEmpty()) return null;
-        ArrayList<String> out = new ArrayList<>();
-        for (char c : str.toCharArray()) {
-            if (Character.isDigit(c)) out.add(String.valueOf(c));
-        }
-        return out;
     }
 }

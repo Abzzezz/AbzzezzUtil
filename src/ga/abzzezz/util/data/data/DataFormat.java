@@ -27,15 +27,21 @@ import java.util.List;
 public class DataFormat {
 
     /**
-     * Headers
+     * URL to read from
      */
-    //URL to read from
     private URL url;
-    //Should new lines be created, used for storing to a file
+    /**
+     * Should new lines be created?
+     * used for storing to a file
+     */
     private static boolean newLine;
-    //List of all blocks to optimize decoding. Gets stored as soon as the constructor is called
+    /**
+     * List of all blocks to optimize decoding. Gets stored as soon as the constructor is called
+     */
     private List<String> allBlocks;
-    //BlockFormatter instance
+    /**
+     * Block Formatter instance
+     */
     private static BlockFormatter blockFormatter = new BlockFormatter();
 
     /**
@@ -94,7 +100,7 @@ public class DataFormat {
     }
 
     /**
-     * Append everything to a string, then do whatever
+     * Append everything to a string, then return
      *
      * @param data
      * @return
@@ -133,14 +139,11 @@ public class DataFormat {
             Logger.log("Decoding file", Logger.LogType.ERROR);
             e.printStackTrace();
         }
-
         return null;
     }
 
     /**
      * Decodes values to object array
-     * TODO: Rewrite this
-     *
      * @param keyIn
      * @return
      */
@@ -257,8 +260,8 @@ public class DataFormat {
         return null;
     }
 
-    public void setNewLine(boolean newLine) {
-        this.newLine = newLine;
+    public static void setNewLine(boolean newLine1) {
+        newLine = newLine1;
     }
 
     /**

@@ -27,10 +27,8 @@ public class URLUtil {
         StringBuilder stringBuilder = new StringBuilder();
         try {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                stringBuilder.append(line);
-            }
+            bufferedReader.lines().forEach(line -> stringBuilder.append(line));
+
             bufferedReader.close();
             return stringBuilder.toString();
         } catch (IOException e) {
@@ -41,6 +39,7 @@ public class URLUtil {
 
     /**
      * Stores all lines from an url into an array
+     *
      * @param url
      * @return
      */
@@ -48,21 +47,18 @@ public class URLUtil {
         ArrayList<String> out = new ArrayList<>();
         try {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                out.add(line);
-            }
+            bufferedReader.lines().forEach(s -> out.add(s));
             bufferedReader.close();
-            return out;
         } catch (IOException e) {
             e.printStackTrace();
             Logger.log("Opening stream to url: " + url.getPath(), Logger.LogType.ERROR);
         }
-        return null;
+        return out;
     }
 
     /**
      * Convert string to url
+     *
      * @param in
      * @param protocol
      * @return
@@ -74,6 +70,7 @@ public class URLUtil {
 
     /**
      * Get domain from url
+     *
      * @param url
      * @return
      */

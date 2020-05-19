@@ -25,11 +25,12 @@ public class ArrayUtil {
      * @see Comparator
      */
     public static ArrayList<String> sortWithNumberInName(ArrayList<String> in) {
-        Collections.sort(in, Comparator.comparingInt(StringUtil::extractNumberint));
+        Collections.sort(in, Comparator.comparingInt(StringUtil::extractNumber));
         return in;
     }
 
     /**
+     * Sort with number in string. Used if number is not easily accessible
      * @param in
      * @param split
      * @param arrayIndex
@@ -37,10 +38,15 @@ public class ArrayUtil {
      */
     public static ArrayList<String> sortWithNumberInName(ArrayList<String> in, String split, int arrayIndex) {
         //if split length < arrayIndex sort 0 to avoid errors
-        Collections.sort(in, Comparator.comparingInt(o -> StringUtil.extractNumberint((o.split(split).length > arrayIndex) ? o.split(split)[arrayIndex] : "0")));
+        Collections.sort(in, Comparator.comparingInt(o -> StringUtil.extractNumber((o.split(split).length > arrayIndex) ? o.split(split)[arrayIndex] : "0")));
         return in;
     }
 
+    /**
+     * Remove element from array
+     * @param arr
+     * @param removedIdx
+     */
     public static void removeElement(Object[] arr, int removedIdx) {
         System.arraycopy(arr, removedIdx + 1, arr, removedIdx, arr.length - 1 - removedIdx);
     }
@@ -66,8 +72,7 @@ public class ArrayUtil {
     }
 
     /**
-     * Only works if keyword only exists one time! Otherwise the last index of the keyword appearing will be returned
-     *
+     * Streams list and returns the first index of the keyword found
      * @param in
      * @param keyword
      * @return
@@ -78,7 +83,6 @@ public class ArrayUtil {
 
     /**
      * Same as the list method, uses arrays instead
-     *
      * @param in
      * @param keyword
      * @return
