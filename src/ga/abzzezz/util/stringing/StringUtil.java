@@ -21,12 +21,12 @@ public class StringUtil {
      *
      * @param in
      * @param toSearch
-     * @param endModifire
+     * @param endModifier
      * @return
      */
-    public static String getStringFromLong(String in, String toSearch, char endModifire) {
+    public static String getStringFromLong(String in, String toSearch, String endModifier) {
         int startIndex = in.indexOf(toSearch) + toSearch.length();
-        return in.substring(startIndex, in.indexOf(startIndex, endModifire));
+        return in.substring(startIndex, in.indexOf(endModifier, startIndex));
     }
 
     /**

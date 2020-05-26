@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 
 public class URLUtil {
@@ -26,7 +27,12 @@ public class URLUtil {
     public static String getURLContentAsString(URL url) {
         StringBuilder stringBuilder = new StringBuilder();
         try {
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
+            URLConnection urlConnection = url.openConnection();
+            urlConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
+            urlConnection.connect();
+
+
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
             bufferedReader.lines().forEach(line -> stringBuilder.append(line));
 
             bufferedReader.close();
@@ -46,8 +52,11 @@ public class URLUtil {
     public static ArrayList<String> getURLContentAsArray(URL url) {
         ArrayList<String> out = new ArrayList<>();
         try {
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
-            bufferedReader.lines().forEach(s -> out.add(s));
+            URLConnection urlConnection = url.openConnection();
+            urlConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
+            urlConnection.connect();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+            bufferedReader.lines().forEach(out::add);
             bufferedReader.close();
         } catch (IOException e) {
             e.printStackTrace();

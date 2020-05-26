@@ -12,6 +12,7 @@ import ga.abzzezz.util.logging.Logger;
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class FileUtil {
 
     /**
      * Gets file content as list
+     *
      * @param file
      * @return
      */
@@ -62,7 +64,6 @@ public class FileUtil {
     }
 
     /**
-     *
      * @param in
      * @param out
      * @param append
@@ -91,7 +92,6 @@ public class FileUtil {
     }
 
     /**
-     *
      * @param in
      * @param out
      * @param append
@@ -139,6 +139,7 @@ public class FileUtil {
 
     /**
      * Copy file from url method. Reads bytes from url and stores them into a file
+     *
      * @param outFile
      * @param inURL
      */
@@ -160,7 +161,42 @@ public class FileUtil {
     }
 
     /**
+     *
+     * @param file
+     * @return
+     */
+    public static String calculateFileSize(File file) {
+        try {
+
+            long fileSize = Files.walk(file.toPath())
+                    .filter(p -> p.toFile().isFile())
+                    .mapToLong(p -> p.toFile().length())
+                    .sum();
+
+            return getReadableSize(fileSize);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "ERROR";
+    }
+
+    /**
+     * Credit: Stackoverflow: https://stackoverflow.com/questions/3263892/format-file-size-as-mb-gb-etc/5599842#5599842
+     *
+     * @param size
+     * @return
+     */
+    public static String getReadableSize(long size) {
+        if (size <= 0) return "0";
+        final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
+        int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
+        return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups))
+                + " " + units[digitGroups];
+    }
+
+    /**
      * Deletes file
+     *
      * @param toDelete
      */
     public static void deleteFile(File toDelete) {

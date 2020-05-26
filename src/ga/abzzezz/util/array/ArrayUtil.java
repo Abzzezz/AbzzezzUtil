@@ -25,7 +25,7 @@ public class ArrayUtil {
      * @see Comparator
      */
     public static ArrayList<String> sortWithNumberInName(ArrayList<String> in) {
-        Collections.sort(in, Comparator.comparingInt(StringUtil::extractNumber));
+        Collections.sort(in, Comparator.comparingInt(StringUtil::extractNumberI));
         return in;
     }
 
@@ -38,7 +38,7 @@ public class ArrayUtil {
      */
     public static ArrayList<String> sortWithNumberInName(ArrayList<String> in, String split, int arrayIndex) {
         //if split length < arrayIndex sort 0 to avoid errors
-        Collections.sort(in, Comparator.comparingInt(o -> StringUtil.extractNumber((o.split(split).length > arrayIndex) ? o.split(split)[arrayIndex] : "0")));
+        Collections.sort(in, Comparator.comparingInt(o -> StringUtil.extractNumberI((o.split(split).length > arrayIndex) ? o.split(split)[arrayIndex] : "0")));
         return in;
     }
 
@@ -59,7 +59,7 @@ public class ArrayUtil {
     @Deprecated
     public static List<Object> convertStringToObjectArray(List<String> in, Class o) {
         List<Object> newArray = new ArrayList<>();
-        for (String s : in) {
+        in.forEach(s -> {
             try {
                 newArray.add(ClassUtil.getMethod(o, "valueOf", new Class[]{String.class}).invoke(o, s));
             } catch (IllegalAccessException e) {
@@ -67,7 +67,7 @@ public class ArrayUtil {
             } catch (InvocationTargetException e) {
                 e.printStackTrace();
             }
-        }
+        });
         return newArray;
     }
 
