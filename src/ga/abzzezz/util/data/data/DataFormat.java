@@ -27,22 +27,22 @@ import java.util.List;
 public class DataFormat {
 
     /**
-     * URL to read from
-     */
-    private URL url;
-    /**
      * Should new lines be created?
      * used for storing to a file
      */
     private static boolean newLine;
     /**
-     * List of all blocks to optimize decoding. Gets stored as soon as the constructor is called
-     */
-    private List<String> allBlocks;
-    /**
      * Block Formatter instance
      */
-    private static BlockFormatter blockFormatter = new BlockFormatter();
+    private static final BlockFormatter blockFormatter = new BlockFormatter();
+    /**
+     * URL to read from
+     */
+    private URL url;
+    /**
+     * List of all blocks to optimize decoding. Gets stored as soon as the constructor is called
+     */
+    private final List<String> allBlocks;
 
     /**
      * Init. Specify file, will be converted to URL
@@ -120,6 +120,10 @@ public class DataFormat {
      * Decoding
      */
 
+    public static void setNewLine(boolean newLine1) {
+        newLine = newLine1;
+    }
+
     /**
      * Decode data and give value for specific key.
      *
@@ -144,6 +148,7 @@ public class DataFormat {
 
     /**
      * Decodes values to object array
+     *
      * @param keyIn
      * @return
      */
@@ -164,12 +169,12 @@ public class DataFormat {
         return array;
     }
 
-
     /**
      * Get value from block
-     * @getString
+     *
      * @param keyIn
      * @return
+     * @getString
      */
     private String getValueFromKey(String keyIn) {
         return getString(keyIn).split(StringUtil.splitter)[2];
@@ -177,6 +182,7 @@ public class DataFormat {
 
     /**
      * Get datatype from block
+     *
      * @param keyIn
      * @return
      */
@@ -231,7 +237,6 @@ public class DataFormat {
         return blocks;
     }
 
-
     /**
      * Formats intended array String back to array
      *
@@ -243,7 +248,9 @@ public class DataFormat {
         String s1 = s.substring(s.indexOf("[") + 1, s.indexOf("]"));
         String[] split = s1.split(",");
         Object[] array = new Object[split.length];
-        for (int i = 0; i < split.length; i++) { array[i] = split[i]; }
+        for (int i = 0; i < split.length; i++) {
+            array[i] = split[i];
+        }
         return array;
     }
 
@@ -258,10 +265,6 @@ public class DataFormat {
             if (s.equalsIgnoreCase(value.getType())) return value;
         }
         return null;
-    }
-
-    public static void setNewLine(boolean newLine1) {
-        newLine = newLine1;
     }
 
     /**
@@ -290,6 +293,7 @@ public class DataFormat {
 
         /**
          * Will be used in the near future
+         *
          * @param dataType
          * @return
          */

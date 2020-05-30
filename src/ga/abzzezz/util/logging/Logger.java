@@ -26,15 +26,8 @@ public class Logger {
      */
     public enum LogType {
         ERROR, INFO, WARNING, NONE;
-
-        String name;
-
-        LogType() {
-            name = this.toString();
-        }
-
         public String getName() {
-            return name;
+            return this.toString();
         }
     }
 }

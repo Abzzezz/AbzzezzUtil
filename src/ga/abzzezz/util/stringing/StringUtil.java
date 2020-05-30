@@ -81,6 +81,7 @@ public class StringUtil {
 
     /**
      * Returns int instead of string
+     *
      * @param str
      * @return
      */

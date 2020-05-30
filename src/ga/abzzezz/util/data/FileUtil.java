@@ -10,10 +10,10 @@ import ga.abzzezz.util.exceptions.WritingtoFileException;
 import ga.abzzezz.util.logging.Logger;
 
 import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 public class FileUtil {
@@ -24,21 +24,8 @@ public class FileUtil {
      * @param file
      * @return
      */
-    public static List<String> getFileContentAsList(File file) {
-        List<String> lines = new ArrayList<>();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-            String line;
-
-            while ((line = bufferedReader.readLine()) != null) {
-                lines.add(line);
-            }
-            bufferedReader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Logger.log("Reading content from file: " + file + "  " + e.getMessage(), Logger.LogType.ERROR);
-        }
-        return lines;
+    public static List<String> getFileContentAsList(File file) throws MalformedURLException {
+        return URLUtil.getURLContentAsArray(file.toURI().toURL());
     }
 
 
@@ -46,21 +33,8 @@ public class FileUtil {
      * @param file
      * @return
      */
-    public static String getFileContentAsString(File file) {
-        StringBuilder stringBuilder = new StringBuilder();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-            String line;
-
-            while ((line = bufferedReader.readLine()) != null) {
-                stringBuilder.append(line);
-            }
-            bufferedReader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Logger.log("Reading content from file: " + file + "  " + e.getMessage(), Logger.LogType.ERROR);
-        }
-        return stringBuilder.toString();
+    public static String getFileContentAsString(File file) throws MalformedURLException {
+        return URLUtil.getURLContentAsString(file.toURI().toURL());
     }
 
     /**
@@ -122,7 +96,7 @@ public class FileUtil {
             dest.createNewFile();
             InputStream inputStream = new BufferedInputStream(new FileInputStream(in));
             OutputStream out = new BufferedOutputStream(new FileOutputStream(dest));
-            byte[] buffer = Files.readAllBytes(in.toPath());
+            byte[] buffer = new byte[4194304];
             int lengthRead;
             while ((lengthRead = inputStream.read(buffer)) > 0) {
                 out.write(buffer, 0, lengthRead);
@@ -147,7 +121,8 @@ public class FileUtil {
         try {
             InputStream inputStream = new BufferedInputStream(new URL(inURL).openStream());
             OutputStream out = new BufferedOutputStream(new FileOutputStream(outFile));
-            byte[] buffer = new byte[1024];
+            //4mb
+            byte[] buffer = new byte[4194304];
             int lengthRead;
             while ((lengthRead = inputStream.read(buffer)) > 0) {
                 out.write(buffer, 0, lengthRead);
@@ -161,7 +136,6 @@ public class FileUtil {
     }
 
     /**
-     *
      * @param file
      * @return
      */
@@ -201,7 +175,6 @@ public class FileUtil {
      */
     public static void deleteFile(File toDelete) {
         if (toDelete.exists()) {
-            toDelete.deleteOnExit();
             Logger.log("File delete state:" + toDelete.delete(), Logger.LogType.INFO);
         }
     }

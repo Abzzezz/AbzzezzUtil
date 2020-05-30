@@ -17,10 +17,11 @@ public class BlockFormatter {
     /**
      * @see Block
      */
-    private char[] bounding = {'{', '}'};
+    private final char[] bounding = {'{', '}'};
 
     /**
      * Format block so it can be decoded
+     *
      * @param o
      * @param key
      * @param val
@@ -32,6 +33,7 @@ public class BlockFormatter {
 
     /**
      * Get size of all blocks in a string. Gets lowest to avoid interference
+     *
      * @param string
      * @return
      */

@@ -11,7 +11,6 @@ import ga.abzzezz.util.logging.Logger;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -27,20 +26,22 @@ public class URLUtil {
     public static String getURLContentAsString(URL url) {
         StringBuilder stringBuilder = new StringBuilder();
         try {
-            URLConnection urlConnection = url.openConnection();
-            urlConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
-            urlConnection.connect();
-
-
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-            bufferedReader.lines().forEach(line -> stringBuilder.append(line));
-
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connectionWithAgent(url).getInputStream()));
+            bufferedReader.lines().forEach(stringBuilder::append);
             bufferedReader.close();
             return stringBuilder.toString();
         } catch (IOException e) {
             e.printStackTrace();
         }
         return "NULL";
+    }
+
+    private static URLConnection connectionWithAgent(URL url) throws IOException {
+        URLConnection urlConnection = url.openConnection();
+        urlConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
+        urlConnection.connect();
+
+        return urlConnection;
     }
 
     /**
@@ -52,10 +53,7 @@ public class URLUtil {
     public static ArrayList<String> getURLContentAsArray(URL url) {
         ArrayList<String> out = new ArrayList<>();
         try {
-            URLConnection urlConnection = url.openConnection();
-            urlConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
-            urlConnection.connect();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connectionWithAgent(url).getInputStream()));
             bufferedReader.lines().forEach(out::add);
             bufferedReader.close();
         } catch (IOException e) {
@@ -72,6 +70,7 @@ public class URLUtil {
      * @param protocol
      * @return
      */
+    @Deprecated
     public static String toUrl(String in, String protocol) {
         protocol = protocol + "://";
         return protocol + in;
@@ -83,12 +82,7 @@ public class URLUtil {
      * @param url
      * @return
      */
-    public static String extractDomainFromURL(String url) {
-        try {
-            return new URL(url).getHost();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        return "";
+    public static String extractDomainFromURL(URL url) {
+        return url.getHost();
     }
 }

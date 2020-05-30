@@ -20,6 +20,7 @@ public class ColorUtil {
 
     /**
      * Convert hex to RGB
+     *
      * @param hex
      * @return
      */
@@ -29,6 +30,7 @@ public class ColorUtil {
 
     /**
      * Make color lighter by certain amount
+     *
      * @param color
      * @param amount
      * @return
@@ -40,6 +42,7 @@ public class ColorUtil {
 
     /**
      * Make color darker by certain amount
+     *
      * @param color
      * @param amount
      * @return
@@ -51,6 +54,7 @@ public class ColorUtil {
 
     /**
      * Invert color
+     *
      * @param color
      * @return
      */
@@ -60,6 +64,7 @@ public class ColorUtil {
 
     /**
      * Add Alpha to color
+     *
      * @param color
      * @param alpha
      * @return
@@ -70,6 +75,7 @@ public class ColorUtil {
 
     /**
      * convert color to integer
+     *
      * @param color
      * @return
      */
@@ -87,6 +93,7 @@ public class ColorUtil {
 
     /**
      * convert to hexadecimal string
+     *
      * @param color
      * @return
      */

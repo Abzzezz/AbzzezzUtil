@@ -13,6 +13,7 @@ public class DateUtil {
 
     /**
      * Get current day
+     *
      * @return
      */
     public static String getCurrentDay() {
@@ -22,6 +23,7 @@ public class DateUtil {
 
     /**
      * Get current time
+     *
      * @return
      */
     public static String getTimeAndMS() {

@@ -13,12 +13,11 @@ public class Block {
      */
 
     //Block bounds
-    private char[] bounding = {'{', '}'};
+    private final char[] bounding = {'{', '}'};
     //Block, can be inner or complete block
-    private String block;
+    private final String block;
 
     /**
-     *
      * @param in
      */
     public Block(String in) {
@@ -29,6 +28,7 @@ public class Block {
      * Get block bounds
      * {             }
      * 1             2
+     *
      * @return
      */
     public int[] getBlock() {
@@ -39,6 +39,7 @@ public class Block {
 
     /**
      * Get inner block
+     *
      * @return
      */
     public String getInnerBlock() {
@@ -48,6 +49,7 @@ public class Block {
 
     /**
      * Format block with bounds
+     *
      * @return
      */
     public String formatBlock() {

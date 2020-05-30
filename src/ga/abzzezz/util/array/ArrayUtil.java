@@ -6,10 +6,8 @@
 
 package ga.abzzezz.util.array;
 
-import ga.abzzezz.util.data.ClassUtil;
 import ga.abzzezz.util.stringing.StringUtil;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
@@ -31,6 +29,7 @@ public class ArrayUtil {
 
     /**
      * Sort with number in string. Used if number is not easily accessible
+     *
      * @param in
      * @param split
      * @param arrayIndex
@@ -43,36 +42,8 @@ public class ArrayUtil {
     }
 
     /**
-     * Remove element from array
-     * @param arr
-     * @param removedIdx
-     */
-    public static void removeElement(Object[] arr, int removedIdx) {
-        System.arraycopy(arr, removedIdx + 1, arr, removedIdx, arr.length - 1 - removedIdx);
-    }
-
-    /**
-     * @param in
-     * @param o
-     * @return
-     */
-    @Deprecated
-    public static List<Object> convertStringToObjectArray(List<String> in, Class o) {
-        List<Object> newArray = new ArrayList<>();
-        in.forEach(s -> {
-            try {
-                newArray.add(ClassUtil.getMethod(o, "valueOf", new Class[]{String.class}).invoke(o, s));
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        });
-        return newArray;
-    }
-
-    /**
      * Streams list and returns the first index of the keyword found
+     *
      * @param in
      * @param keyword
      * @return
@@ -83,6 +54,7 @@ public class ArrayUtil {
 
     /**
      * Same as the list method, uses arrays instead
+     *
      * @param in
      * @param keyword
      * @return
