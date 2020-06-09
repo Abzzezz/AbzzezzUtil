@@ -40,7 +40,6 @@ public class URLUtil {
         URLConnection urlConnection = url.openConnection();
         urlConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
         urlConnection.connect();
-
         return urlConnection;
     }
 

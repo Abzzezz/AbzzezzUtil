@@ -46,7 +46,7 @@ public class StringUtil {
      * @param in
      * @return
      */
-    public static String removeWindowsChars(String in) {
+    public static String removeWindowsCharacters(String in) {
         String[] toRemove = {"\\\\", ":", "\""};
         for (int i = 0; i < toRemove.length; i++) {
             in = in.replaceAll(toRemove[i], "");
@@ -58,12 +58,12 @@ public class StringUtil {
      * Remove all defined not allowed characters from a string
      *
      * @param in
-     * @param array
+     * @param bad
      * @return
      */
-    public static String removenotallowedCharacters(String in, String[] array) {
-        for (int i = 0; i < array.length; i++) {
-            in = in.replaceAll(array[i], "");
+    public static String removeBadCharacters(String in, String... bad) {
+        for (int i = 0; i < bad.length; i++) {
+            in = in.replaceAll(bad[i], "");
         }
         return in;
     }

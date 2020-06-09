@@ -70,6 +70,33 @@ public class DataFormat {
 
 
     /**
+     * Init. Specify file, will be converted to URL
+     *
+     * @param file
+     */
+    public DataFormat(File file, boolean newLine) {
+        try {
+            this.url = file.toURI().toURL();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        this.newLine = newLine;
+        this.allBlocks = getBlocks();
+    }
+
+    /**
+     * Now possible to read from URLs too
+     *
+     * @param url
+     */
+    public DataFormat(URL url, boolean newLine) {
+        this.url = url;
+        this.newLine = newLine;
+        this.allBlocks = getBlocks();
+    }
+
+
+    /**
      * Format Data methods
      */
 
@@ -115,15 +142,6 @@ public class DataFormat {
         return stringBuilder.toString();
     }
 
-
-    /**
-     * Decoding
-     */
-
-    public static void setNewLine(boolean newLine1) {
-        newLine = newLine1;
-    }
-
     /**
      * Decode data and give value for specific key.
      *
@@ -139,7 +157,7 @@ public class DataFormat {
             } else {
                 return ClassUtil.getMethod(dataType.aClass, "valueOf", new Class[]{String.class}).invoke(dataType.aClass, value);
             }
-        } catch (IllegalAccessException | InvocationTargetException e) {
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             Logger.log("Decoding file", Logger.LogType.ERROR);
             e.printStackTrace();
         }
@@ -163,7 +181,7 @@ public class DataFormat {
                 array[0] = (dataType == DataType.STRING ||
                         dataType == DataType.CHARACTER) ? array[0] = value : ClassUtil.getMethod(dataType.aClass, "valueOf", new Class[]{String.class}).invoke(dataType.aClass, value);
             }
-        } catch (IllegalAccessException | InvocationTargetException e) {
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
         }
         return array;
@@ -215,26 +233,26 @@ public class DataFormat {
          */
         List<String> lines = URLUtil.getURLContentAsArray(url);
         //New array to store blocks
-        List<String> blocks = new ArrayList<>();
+        List<String> blockData = new ArrayList<>();
         //For every line check for blocks
         for (String line : lines) {
             //Get total blocks
             int blockSize = blockFormatter.getBlockElements(line);
             //new stringbuilder for easier deletion
             StringBuilder builderLine = new StringBuilder(line);
+
             for (int i = 0; i < blockSize; i++) {
                 Block block = new Block(builderLine.toString());
                 //Get block bounds
                 int[] blockBounds = block.getBlock();
                 //Add inner block to blocks array
-                blocks.add(block.getInnerBlock());
+                blockData.add(block.getInnerBlock());
                 //Delete old block from builder so new once can be found
                 builderLine.delete(blockBounds[0], blockBounds[1]);
             }
         }
-
         //Return block array
-        return blocks;
+        return blockData;
     }
 
     /**

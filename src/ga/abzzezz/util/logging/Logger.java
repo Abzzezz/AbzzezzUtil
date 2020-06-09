@@ -13,10 +13,6 @@ import javax.swing.*;
  */
 public class Logger {
 
-    public static String logSwingInput(String in) {
-        return JOptionPane.showInputDialog(in);
-    }
-
     public static void log(String message, LogType type) {
         System.out.println("[" + type.getName() + "] " + message);
     }

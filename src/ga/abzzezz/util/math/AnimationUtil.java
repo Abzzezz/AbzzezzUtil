@@ -58,7 +58,7 @@ public class AnimationUtil {
             Method m = ClassUtil.getMethod(classToUse, "easeInOut", new Class[]{float.class, float.class, float.class, float.class});
             this.velocity = (float) m.invoke(classToUse, time, min, max, max);
             this.oppositeVelocity = MathUtil.nabs((float) m.invoke(classToUse, time, min, max, max));
-        } catch (IllegalAccessException | InvocationTargetException e) {
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
         }
     }
 
