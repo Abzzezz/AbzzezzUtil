@@ -91,12 +91,12 @@ public class FileUtil {
      * @param dest
      * @param delete
      */
-    public static void copyFile(File in, File dest, boolean delete) {
+    public static boolean copyFile(File in, File dest, boolean delete) {
         try {
-            dest.createNewFile();
+            if(!dest.exists()) dest.createNewFile();
             InputStream inputStream = new BufferedInputStream(new FileInputStream(in));
             OutputStream out = new BufferedOutputStream(new FileOutputStream(dest));
-            byte[] buffer = new byte[4194304];
+            byte[] buffer = new byte[1024];
             int lengthRead;
             while ((lengthRead = inputStream.read(buffer)) > 0) {
                 out.write(buffer, 0, lengthRead);
@@ -104,25 +104,26 @@ public class FileUtil {
             }
             inputStream.close();
             out.close();
-
             if (delete) Files.delete(in.toPath());
+            return true;
         } catch (IOException e) {
-            Logger.log("Creating new file", Logger.LogType.ERROR);
+            Logger.log("Creating new file" + e.getMessage(), Logger.LogType.ERROR);
+            return false;
         }
     }
 
     /**
      * Copy file from url method. Reads bytes from url and stores them into a file
      *
-     * @param outFile
+     * @param dest
      * @param inURL
      */
-    public static void copyFileFromURL(File outFile, String inURL) {
+    public static boolean copyFileFromURL(File dest, String inURL) {
         try {
+            if(!dest.exists()) dest.createNewFile();
             InputStream inputStream = new BufferedInputStream(new URL(inURL).openStream());
-            OutputStream out = new BufferedOutputStream(new FileOutputStream(outFile));
-            //4mb
-            byte[] buffer = new byte[4194304];
+            OutputStream out = new BufferedOutputStream(new FileOutputStream(dest));
+            byte[] buffer = new byte[1024];
             int lengthRead;
             while ((lengthRead = inputStream.read(buffer)) > 0) {
                 out.write(buffer, 0, lengthRead);
@@ -130,8 +131,10 @@ public class FileUtil {
             }
             inputStream.close();
             out.close();
+            return true;
         } catch (IOException e) {
-            Logger.log("Creating copying File from URL: " + inURL, Logger.LogType.ERROR);
+            Logger.log("Copying File from URL: " + inURL + e.getMessage(), Logger.LogType.ERROR);
+            return false;
         }
     }
 

@@ -6,31 +6,25 @@
 
 package ga.abzzezz.util.data.data;
 
-import ga.abzzezz.util.array.ArrayUtil;
 import ga.abzzezz.util.data.ClassUtil;
 import ga.abzzezz.util.data.FileUtil;
 import ga.abzzezz.util.data.URLUtil;
 import ga.abzzezz.util.logging.Logger;
-import ga.abzzezz.util.stringing.StringUtil;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
  * Class to format and decode data blocks
  * Takes in a file or url and converts it to an url
  */
-public class DataFormat {
+public class DataFormat<E> {
 
-    /**
-     * Should new lines be created?
-     * used for storing to a file
-     */
-    private static boolean newLine;
     /**
      * Block Formatter instance
      */
@@ -42,7 +36,7 @@ public class DataFormat {
     /**
      * List of all blocks to optimize decoding. Gets stored as soon as the constructor is called
      */
-    private final List<String> allBlocks;
+    private final HashMap<String, BlockData> allBlocks;
 
     /**
      * Init. Specify file, will be converted to URL
@@ -53,6 +47,7 @@ public class DataFormat {
         try {
             this.url = file.toURI().toURL();
         } catch (MalformedURLException e) {
+            Logger.log("Error converting Filepath to URL. Check path", Logger.LogType.ERROR);
             e.printStackTrace();
         }
         this.allBlocks = getBlocks();
@@ -68,37 +63,10 @@ public class DataFormat {
         this.allBlocks = getBlocks();
     }
 
-
-    /**
-     * Init. Specify file, will be converted to URL
-     *
-     * @param file
-     */
-    public DataFormat(File file, boolean newLine) {
-        try {
-            this.url = file.toURI().toURL();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        this.newLine = newLine;
-        this.allBlocks = getBlocks();
-    }
-
-    /**
-     * Now possible to read from URLs too
-     *
-     * @param url
-     */
-    public DataFormat(URL url, boolean newLine) {
-        this.url = url;
-        this.newLine = newLine;
-        this.allBlocks = getBlocks();
-    }
-
-
     /**
      * Format Data methods
      */
+
 
     /**
      * Data will be formatted to the "Abzzezz util data format" and stored to a file
@@ -106,7 +74,9 @@ public class DataFormat {
      * @param data
      * @return
      */
-    public static void formatData(DataObject data, File file, boolean append) {
+
+
+    public static void formatData(DataObject data, File file, boolean append, boolean newLine) {
         FileUtil.writeArrayListToFile(formatDataList(data), file, append, newLine);
     }
 
@@ -148,14 +118,15 @@ public class DataFormat {
      * @param keyIn
      * @return
      */
-    public Object decode(String keyIn) {
+    public E decode(String keyIn) {
         try {
-            String value = getValueFromKey(keyIn);
-            DataType dataType = getDataType(getData(keyIn));
+            BlockData blockData = getBlockDataFromKey(keyIn);
+            E value = (E) blockData.getValue();
+            DataType dataType = getDataType(blockData.getDataType());
             if (dataType == DataType.ARRAY || dataType == DataType.STRING || dataType == DataType.CHARACTER) {
                 return value;
             } else {
-                return ClassUtil.getMethod(dataType.aClass, "valueOf", new Class[]{String.class}).invoke(dataType.aClass, value);
+                return (E) ClassUtil.getMethod(dataType.aClass, "valueOf", String.class).invoke(dataType.aClass, value);
             }
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             Logger.log("Decoding file", Logger.LogType.ERROR);
@@ -170,21 +141,22 @@ public class DataFormat {
      * @param keyIn
      * @return
      */
-    public Object[] decodeToArray(String keyIn) {
-        Object[] array = new Object[1];
+    public E[] decodeToArray(String keyIn) {
         try {
-            String value = getValueFromKey(keyIn);
-            DataType dataType = getDataType(getData(keyIn));
+            BlockData blockData = getBlockDataFromKey(keyIn);
+            DataType dataType = getDataType(blockData.getDataType());
             if (dataType == DataType.ARRAY) {
-                array = regenerateArray(value);
+                return regenerateArray((String) blockData.getValue(), blockData.getDataType());
             } else {
-                array[0] = (dataType == DataType.STRING ||
-                        dataType == DataType.CHARACTER) ? array[0] = value : ClassUtil.getMethod(dataType.aClass, "valueOf", new Class[]{String.class}).invoke(dataType.aClass, value);
+                Object value = (dataType == DataType.STRING ||
+                        dataType == DataType.CHARACTER) ? blockData.getValue() : ClassUtil.getMethod(dataType.aClass, "valueOf", String.class).invoke(dataType.aClass, blockData.getValue());
+
+                return (E[]) new Object[]{value};
             }
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
         }
-        return array;
+        return null;
     }
 
     /**
@@ -194,28 +166,13 @@ public class DataFormat {
      * @return
      * @getString
      */
-    private String getValueFromKey(String keyIn) {
-        return getString(keyIn).split(StringUtil.splitter)[2];
-    }
-
-    /**
-     * Get datatype from block
-     *
-     * @param keyIn
-     * @return
-     */
-    private String getData(String keyIn) {
-        return getString(keyIn).split(StringUtil.splitter)[0];
-    }
-
-    /**
-     * Get block with desired keyword
-     *
-     * @param keyIn
-     * @return
-     */
-    private String getString(String keyIn) {
-        return allBlocks.get(ArrayUtil.indexOfKey(allBlocks, keyIn));
+    private BlockData getBlockDataFromKey(String keyIn) {
+        try {
+            return allBlocks.get(keyIn);
+        } catch (NullPointerException e) {
+            Logger.log("Error finding key", Logger.LogType.ERROR);
+            return null;
+        }
     }
 
     /**
@@ -223,34 +180,28 @@ public class DataFormat {
      * Block: {DataType:::key:::value}
      * Blocks can now be stored in one single line, instead of every block having its own line
      * Eg: {DataType:::key:::value} {DataType:::key:::value} {DataType:::key:::value}
-     * Block 1                  Block2                   Block3
+     * Block 1                   Block2                   Block3
      *
      * @return
      */
-    private List<String> getBlocks() {
-        /*
-        Get all lines from url
-         */
-        List<String> lines = URLUtil.getURLContentAsArray(url);
+    private HashMap<String, BlockData> getBlocks() {
         //New array to store blocks
-        List<String> blockData = new ArrayList<>();
+        HashMap<String, BlockData> blockData = new HashMap<>();
         //For every line check for blocks
-        for (String line : lines) {
+        URLUtil.getURLContentAsArray(url).stream().forEach(s -> {
             //Get total blocks
-            int blockSize = blockFormatter.getBlockElements(line);
+            int blockSize = blockFormatter.getBlockElements(s);
             //new stringbuilder for easier deletion
-            StringBuilder builderLine = new StringBuilder(line);
+            StringBuilder builderLine = new StringBuilder(s);
 
             for (int i = 0; i < blockSize; i++) {
                 Block block = new Block(builderLine.toString());
-                //Get block bounds
-                int[] blockBounds = block.getBlock();
-                //Add inner block to blocks array
-                blockData.add(block.getInnerBlock());
+                //Put block key, data and value
+                blockData.put(block.getKey(), new BlockData(block.getDataType(), block.getValue()));
                 //Delete old block from builder so new once can be found
-                builderLine.delete(blockBounds[0], blockBounds[1]);
+                builderLine.delete(block.getBlock()[0], block.getBlock()[1]);
             }
-        }
+        });
         //Return block array
         return blockData;
     }
@@ -262,14 +213,16 @@ public class DataFormat {
      * @return
      */
 
-    private Object[] regenerateArray(String s) {
-        String s1 = s.substring(s.indexOf("[") + 1, s.indexOf("]"));
-        String[] split = s1.split(",");
-        Object[] array = new Object[split.length];
-        for (int i = 0; i < split.length; i++) {
-            array[i] = split[i];
+    private E[] regenerateArray(String s, String dataType1) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        DataType dataType = getDataType(dataType1.split(":")[1]);
+
+        String[] s1 = s.substring(s.indexOf("[") + 1, s.indexOf("]")).split(",");
+        Object[] array = new Object[s1.length];
+        for (int i = 0; i < s1.length; i++) {
+            array[i] = ClassUtil.getMethod(dataType.aClass, "valueOf", String.class).invoke(dataType.aClass, s1[i].replace(" ", ""));
+
         }
-        return array;
+        return (E[]) array;
     }
 
     /**
@@ -280,7 +233,8 @@ public class DataFormat {
      */
     private DataType getDataType(String s) {
         for (DataType value : DataType.values()) {
-            if (s.equalsIgnoreCase(value.getType())) return value;
+            if(s.contains("Array") && s.contains(value.getType())) return DataType.ARRAY;
+            else if (s.contains(value.getType())) return value;
         }
         return null;
     }

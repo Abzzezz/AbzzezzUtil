@@ -6,6 +6,7 @@
 
 package ga.abzzezz.util.data.data;
 
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -29,12 +30,12 @@ public class DataObject {
         this.map.put(value, key + ":" + value);
     }
 
-    public void addList(List<?> in, String key) {
+    public void addList(String key, List<?> in) {
         this.map.put(new ArrayList<>(in), key + ":" + in.toString());
     }
 
-    public void addArray(Object[] in, String key) {
-        this.map.put(Arrays.asList(in), key + ":" + Arrays.toString(in));
+    public void addArray(String key, Object[] in) {
+        this.map.put(in, key + ":" + Arrays.toString(in));
     }
 
     public HashMap<Object, Object> getMap() {

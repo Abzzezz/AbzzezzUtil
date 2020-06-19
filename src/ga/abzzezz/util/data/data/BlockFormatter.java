@@ -28,7 +28,7 @@ public class BlockFormatter {
      * @return
      */
     public String formatBlock(Object o, String key, String val) {
-        return new Block(o.getClass().getSimpleName() + StringUtil.splitter + key + StringUtil.splitter + val).formatBlock();
+        return new Block((o.getClass().isArray() ? "Array:" + o.getClass().getSimpleName() : o.getClass().getSimpleName()) + StringUtil.splitter + key + StringUtil.splitter + val).formatBlock();
     }
 
     /**

@@ -8,6 +8,7 @@ package ga.abzzezz.util.array;
 
 import ga.abzzezz.util.stringing.StringUtil;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -51,7 +52,12 @@ public class ArrayUtil {
      * @return
      */
     public static int indexOfKey(List<String> in, String keyword) {
-        return in.indexOf(in.stream().filter(s -> s.contains(keyword)).findFirst().get());
+        try {
+            return in.indexOf(in.stream().filter(s -> s.contains(keyword)).findFirst().get());
+        } catch (NoSuchElementException e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 
     /**

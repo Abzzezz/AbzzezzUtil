@@ -6,7 +6,9 @@
 
 package ga.abzzezz.util.data.data;
 
-public class Block {
+import ga.abzzezz.util.stringing.StringUtil;
+
+public class Block<E> {
 
     /**
      * For future purposes
@@ -45,6 +47,22 @@ public class Block {
     public String getInnerBlock() {
         int[] block = getBlock();
         return this.block.substring(block[0] + 1, block[1] - 1);
+    }
+
+    public String[] getAll() {
+        return getInnerBlock().split(StringUtil.splitter);
+    }
+
+    public E getValue() {
+        return (E) getAll()[2];
+    }
+
+    public String getKey() {
+        return getAll()[1];
+    }
+
+    public String getDataType() {
+        return getAll()[0];
     }
 
     /**

@@ -23,7 +23,7 @@ public class ClassUtil {
      * @param params
      * @return
      */
-    public static Method getMethod(Class c, String method, Class[] params) throws NoSuchMethodException {
+    public static Method getMethod(Class c, String method, Class... params) throws NoSuchMethodException {
         return c.getDeclaredMethod(method, params);
 
     }
