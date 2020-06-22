@@ -23,7 +23,7 @@ import java.util.List;
  * Class to format and decode data blocks
  * Takes in a file or url and converts it to an url
  */
-public class DataFormat<E> {
+public class DataFormat<V> {
 
     /**
      * Block Formatter instance
@@ -104,11 +104,7 @@ public class DataFormat<E> {
      */
     public static String formatData(DataObject data) {
         StringBuilder stringBuilder = new StringBuilder();
-        for (Object o : data.getMap().keySet()) {
-            String valMap = data.getMap().get(o).toString();
-            String[] split = valMap.split(":");
-            stringBuilder.append(blockFormatter.formatBlock(o, split[0], split[1]));
-        }
+        formatDataList(data).forEach(stringBuilder::append);
         return stringBuilder.toString();
     }
 
@@ -118,15 +114,15 @@ public class DataFormat<E> {
      * @param keyIn
      * @return
      */
-    public E decode(String keyIn) {
+    public V decode(String keyIn) {
         try {
             BlockData blockData = getBlockDataFromKey(keyIn);
-            E value = (E) blockData.getValue();
+            V value = (V) blockData.getValue();
             DataType dataType = getDataType(blockData.getDataType());
             if (dataType == DataType.ARRAY || dataType == DataType.STRING || dataType == DataType.CHARACTER) {
                 return value;
             } else {
-                return (E) ClassUtil.getMethod(dataType.aClass, "valueOf", String.class).invoke(dataType.aClass, value);
+                return (V) ClassUtil.getMethod(dataType.aClass, "valueOf", String.class).invoke(dataType.aClass, value);
             }
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             Logger.log("Decoding file", Logger.LogType.ERROR);
@@ -141,7 +137,7 @@ public class DataFormat<E> {
      * @param keyIn
      * @return
      */
-    public E[] decodeToArray(String keyIn) {
+    public V[] decodeToArray(String keyIn) {
         try {
             BlockData blockData = getBlockDataFromKey(keyIn);
             DataType dataType = getDataType(blockData.getDataType());
@@ -150,10 +146,10 @@ public class DataFormat<E> {
             } else {
                 Object value = (dataType == DataType.STRING ||
                         dataType == DataType.CHARACTER) ? blockData.getValue() : ClassUtil.getMethod(dataType.aClass, "valueOf", String.class).invoke(dataType.aClass, blockData.getValue());
-
-                return (E[]) new Object[]{value};
+                return (V[]) new Object[]{value};
             }
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            Logger.log("Decoding file", Logger.LogType.ERROR);
             e.printStackTrace();
         }
         return null;
@@ -213,16 +209,14 @@ public class DataFormat<E> {
      * @return
      */
 
-    private E[] regenerateArray(String s, String dataType1) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    private V[] regenerateArray(String s, String dataType1) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         DataType dataType = getDataType(dataType1.split(":")[1]);
-
-        String[] s1 = s.substring(s.indexOf("[") + 1, s.indexOf("]")).split(",");
-        Object[] array = new Object[s1.length];
-        for (int i = 0; i < s1.length; i++) {
-            array[i] = ClassUtil.getMethod(dataType.aClass, "valueOf", String.class).invoke(dataType.aClass, s1[i].replace(" ", ""));
-
+        String[] values = s.substring(s.indexOf("[") + 1, s.indexOf("]")).split(",");
+        Object[] array = new Object[values.length];
+        for (int i = 0; i < values.length; i++) {
+            array[i] = ClassUtil.getMethod(dataType.aClass, "valueOf", String.class).invoke(dataType.aClass, values[i].replace(" ", ""));
         }
-        return (E[]) array;
+        return (V[]) array;
     }
 
     /**
@@ -252,28 +246,13 @@ public class DataFormat<E> {
         BYTE(Byte.class),
         SHORT(Short.class),
         CHARACTER(Character.class);
-
         Class aClass;
-
         DataType(Class c) {
             this.aClass = c;
         }
-
         public Class getaClass() {
             return aClass;
         }
-
-        /**
-         * Will be used in the near future
-         *
-         * @param dataType
-         * @return
-         */
-        public boolean isDataChar(DataType dataType) {
-            return dataType == DataType.STRING ||
-                    dataType == DataType.CHARACTER;
-        }
-
         public String getType() {
             return aClass.getSimpleName();
         }
