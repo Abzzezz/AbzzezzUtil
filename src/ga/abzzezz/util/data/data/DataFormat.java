@@ -36,7 +36,7 @@ public class DataFormat<V> {
     /**
      * List of all blocks to optimize decoding. Gets stored as soon as the constructor is called
      */
-    private final HashMap<String, BlockData> allBlocks;
+    private final HashMap<String, BlockData<V>> allBlocks;
 
     /**
      * Init. Specify file, will be converted to URL
@@ -116,8 +116,8 @@ public class DataFormat<V> {
      */
     public V decode(String keyIn) {
         try {
-            BlockData blockData = getBlockDataFromKey(keyIn);
-            V value = (V) blockData.getValue();
+            BlockData<V> blockData = getBlockDataFromKey(keyIn);
+            V value = blockData.getValue();
             DataType dataType = getDataType(blockData.getDataType());
             if (dataType == DataType.ARRAY || dataType == DataType.STRING || dataType == DataType.CHARACTER) {
                 return value;
@@ -162,7 +162,7 @@ public class DataFormat<V> {
      * @return
      * @getString
      */
-    private BlockData getBlockDataFromKey(String keyIn) {
+    private BlockData<V> getBlockDataFromKey(String keyIn) {
         try {
             return allBlocks.get(keyIn);
         } catch (NullPointerException e) {
@@ -180,9 +180,9 @@ public class DataFormat<V> {
      *
      * @return
      */
-    private HashMap<String, BlockData> getBlocks() {
+    private HashMap<String, BlockData<V>> getBlocks() {
         //New array to store blocks
-        HashMap<String, BlockData> blockData = new HashMap<>();
+        HashMap<String, BlockData<V>> blockData = new HashMap<>();
         //For every line check for blocks
         URLUtil.getURLContentAsArray(url).stream().forEach(s -> {
             //Get total blocks
@@ -191,9 +191,9 @@ public class DataFormat<V> {
             StringBuilder builderLine = new StringBuilder(s);
 
             for (int i = 0; i < blockSize; i++) {
-                Block block = new Block(builderLine.toString());
+                Block<V> block = new Block<>(builderLine.toString());
                 //Put block key, data and value
-                blockData.put(block.getKey(), new BlockData(block.getDataType(), block.getValue()));
+                blockData.put(block.getKey(), new BlockData<>(block.getDataType(), block.getValue()));
                 //Delete old block from builder so new once can be found
                 builderLine.delete(block.getBlock()[0], block.getBlock()[1]);
             }

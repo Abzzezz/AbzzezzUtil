@@ -8,7 +8,7 @@ package ga.abzzezz.util.data.data;
 
 import ga.abzzezz.util.stringing.StringUtil;
 
-public class Block<E> {
+public class Block<V> {
 
     /**
      * For future purposes
@@ -53,8 +53,8 @@ public class Block<E> {
         return getInnerBlock().split(StringUtil.splitter);
     }
 
-    public E getValue() {
-        return (E) getAll()[2];
+    public V getValue() {
+        return (V) getAll()[2];
     }
 
     public String getKey() {

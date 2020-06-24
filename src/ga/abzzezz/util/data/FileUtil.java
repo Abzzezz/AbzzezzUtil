@@ -12,6 +12,8 @@ import ga.abzzezz.util.logging.Logger;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.util.List;
@@ -93,7 +95,7 @@ public class FileUtil {
      */
     public static boolean copyFile(File in, File dest, boolean delete) {
         try {
-            if(!dest.exists()) dest.createNewFile();
+            if (!dest.exists()) dest.createNewFile();
             InputStream inputStream = new BufferedInputStream(new FileInputStream(in));
             OutputStream out = new BufferedOutputStream(new FileOutputStream(dest));
             byte[] buffer = new byte[1024];
@@ -120,20 +122,33 @@ public class FileUtil {
      */
     public static boolean copyFileFromURL(File dest, String inURL) {
         try {
-            if(!dest.exists()) dest.createNewFile();
+            if (!dest.exists()) dest.createNewFile();
             InputStream inputStream = new BufferedInputStream(new URL(inURL).openStream());
-            OutputStream out = new BufferedOutputStream(new FileOutputStream(dest));
+            FileOutputStream out = new FileOutputStream(dest);
             byte[] buffer = new byte[1024];
             int lengthRead;
-            while ((lengthRead = inputStream.read(buffer)) > 0) {
+            while ((lengthRead = inputStream.read(buffer, 0, 1024)) != -1) {
                 out.write(buffer, 0, lengthRead);
-                out.flush();
             }
+            out.flush();
             inputStream.close();
             out.close();
             return true;
         } catch (IOException e) {
             Logger.log("Copying File from URL: " + inURL + e.getMessage(), Logger.LogType.ERROR);
+            return false;
+        }
+    }
+
+    public static boolean copyFileFromURL(File dest, URL in) {
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(dest);
+            fileOutputStream.getChannel().transferFrom(Channels.newChannel(in.openStream()), 0, Long.MAX_VALUE);
+            fileOutputStream.close();
+            return true;
+        } catch (IOException e) {
+            Logger.log("Copying file from url: " + e.getMessage(), Logger.LogType.INFO);
+            e.printStackTrace();
             return false;
         }
     }
@@ -149,7 +164,6 @@ public class FileUtil {
                     .filter(p -> p.toFile().isFile())
                     .mapToLong(p -> p.toFile().length())
                     .sum();
-
             return getReadableSize(fileSize);
         } catch (IOException e) {
             e.printStackTrace();

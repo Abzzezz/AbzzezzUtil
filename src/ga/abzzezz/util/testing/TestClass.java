@@ -7,10 +7,13 @@
 package ga.abzzezz.util.testing;
 
 
+import ga.abzzezz.util.data.FileUtil;
 import ga.abzzezz.util.data.data.DataFormat;
 import ga.abzzezz.util.data.data.DataObject;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,6 +34,8 @@ public class TestClass {
      * @param args
      */
     public static void main(String[] args) {
+        FileUtil.copyFileFromURL(new File(System.getProperty("user.home"), "out.wav"), "http://abzzezz.bplaced.net/Chatroom/sounds/walking-woods.wav");
+
         DataObject dataObject = new DataObject();
 
         List<String> dataIn = new LinkedList<>();
@@ -53,7 +58,7 @@ public class TestClass {
         DataFormat.formatData(dataObject, f, false, false);
 
 
-        DataFormat dataFormat = new DataFormat(f);
+        DataFormat  dataFormat = new DataFormat(f);
 
         testvalue = (String) dataFormat.decode("TestKey");
         integerout = (int) dataFormat.decode("IntegerKey");
