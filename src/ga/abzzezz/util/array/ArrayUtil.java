@@ -23,8 +23,8 @@ public class ArrayUtil {
      * @return
      * @see Comparator
      */
-    public static ArrayList<String> sortWithNumberInName(ArrayList<String> in) {
-        Collections.sort(in, Comparator.comparingInt(StringUtil::extractNumberI));
+    public static List<String> sortWithNumberInName(List<String> in) {
+        in.sort(Comparator.comparingInt(StringUtil::extractNumberI));
         return in;
     }
 
@@ -36,9 +36,9 @@ public class ArrayUtil {
      * @param arrayIndex
      * @return
      */
-    public static ArrayList<String> sortWithNumberInName(ArrayList<String> in, String split, int arrayIndex) {
+    public static List<String> sortWithNumberInName(List<String> in, String split, int arrayIndex) {
         //if split length < arrayIndex sort 0 to avoid errors
-        Collections.sort(in, Comparator.comparingInt(o -> StringUtil.extractNumberI((o.split(split).length > arrayIndex) ? o.split(split)[arrayIndex] : "0")));
+        in.sort(Comparator.comparingInt(o -> StringUtil.extractNumberI((o.split(split).length > arrayIndex) ? o.split(split)[arrayIndex] : "0")));
         return in;
     }
 

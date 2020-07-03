@@ -13,7 +13,6 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.util.List;
@@ -27,7 +26,7 @@ public class FileUtil {
      * @return
      */
     public static List<String> getFileContentAsList(File file) throws MalformedURLException {
-        return URLUtil.getURLContentAsArray(file.toURI().toURL());
+        return URLUtil.getURLContentAsList(file.toURI().toURL());
     }
 
 
@@ -45,24 +44,24 @@ public class FileUtil {
      * @param append
      * @param newLine
      */
-    public static void writeArrayListToFile(List<String> in, File out, boolean append, boolean newLine) {
+    public static <E> void writeArrayListToFile(List<E> in, File out, boolean append, boolean newLine) {
         try {
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(out, append));
             in.forEach(s -> {
                 try {
-                    bufferedWriter.write(s);
+                    bufferedWriter.write(String.valueOf(s));
                     if (newLine) bufferedWriter.newLine();
                 } catch (IOException e) {
+                    try {
+                        throw new WritingtoFileException();
+                    } catch (WritingtoFileException writingtoFileException) {
+                        writingtoFileException.printStackTrace();
+                    }
                     Logger.log("Writing to file: " + out + "  " + e.getMessage(), Logger.LogType.ERROR);
                 }
             });
             bufferedWriter.close();
         } catch (IOException e) {
-            try {
-                throw new WritingtoFileException();
-            } catch (WritingtoFileException writingtoFileException) {
-                writingtoFileException.printStackTrace();
-            }
             Logger.log("Checking file: " + out + "  " + e.getMessage(), Logger.LogType.ERROR);
         }
     }
@@ -72,10 +71,10 @@ public class FileUtil {
      * @param out
      * @param append
      */
-    public static void appendToFile(String in, File out, boolean append) {
+    public static <E> void appendToFile(E in, File out, boolean append) {
         try {
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(out, append));
-            bufferedWriter.write(in);
+            bufferedWriter.write(String.valueOf(in));
             bufferedWriter.newLine();
             bufferedWriter.close();
         } catch (IOException e) {

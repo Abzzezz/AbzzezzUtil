@@ -139,7 +139,7 @@ public class DataFormat<V> {
      */
     public V[] decodeToArray(String keyIn) {
         try {
-            BlockData blockData = getBlockDataFromKey(keyIn);
+            BlockData<V> blockData = getBlockDataFromKey(keyIn);
             DataType dataType = getDataType(blockData.getDataType());
             if (dataType == DataType.ARRAY) {
                 return regenerateArray((String) blockData.getValue(), blockData.getDataType());
@@ -184,7 +184,7 @@ public class DataFormat<V> {
         //New array to store blocks
         HashMap<String, BlockData<V>> blockData = new HashMap<>();
         //For every line check for blocks
-        URLUtil.getURLContentAsArray(url).stream().forEach(s -> {
+        URLUtil.getURLContentAsList(url).forEach(s -> {
             //Get total blocks
             int blockSize = blockFormatter.getBlockElements(s);
             //new stringbuilder for easier deletion

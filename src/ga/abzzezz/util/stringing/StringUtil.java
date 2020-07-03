@@ -86,6 +86,6 @@ public class StringUtil {
      * @return
      */
     public static int extractNumberI(String str) {
-        return Integer.valueOf(extractNumber(str));
+        return Integer.parseInt(extractNumber(str));
     }
 }

@@ -14,6 +14,8 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class URLUtil {
 
@@ -49,17 +51,15 @@ public class URLUtil {
      * @param url
      * @return
      */
-    public static ArrayList<String> getURLContentAsArray(URL url) {
-        ArrayList<String> out = new ArrayList<>();
+    public static List<String> getURLContentAsList(URL url) {
         try {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connectionWithAgent(url).getInputStream()));
-            bufferedReader.lines().forEach(out::add);
-            bufferedReader.close();
+            return bufferedReader.lines().collect(Collectors.toList());
         } catch (IOException e) {
             e.printStackTrace();
             Logger.log("Opening stream to url: " + url.getPath(), Logger.LogType.ERROR);
+            return null;
         }
-        return out;
     }
 
     /**
